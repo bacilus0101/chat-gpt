@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Science Topics Presentation</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #151d36;
+      --text: #edf2ff;
+      --muted: #b4c0e0;
+      --accent: #74b0ff;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(160deg, var(--bg), #0f1d4d);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 2rem 1rem 3rem;
+    }
+    h1 { margin-bottom: 0.5rem; }
+    .intro { color: var(--muted); max-width: 760px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid #2a3b72;
+      border-radius: 12px;
+      padding: 1rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+    .card h2 { font-size: 1.1rem; margin-top: 0; }
+    .card p { color: var(--muted); margin-bottom: 0; }
+    footer {
+      margin-top: 2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Science & Engineering Mini-Presentation</h1>
+    <p class="intro">
+      Explore concise topic pages for plasma science, materials processing, thermal instrumentation,
+      and nanoscale optoelectronics.
+    </p>
+
+    <section class="grid" aria-label="Topic links">
+      <a class="card" href="topics/plasma-sheath.html">
+        <h2>Plasma Sheath</h2>
+        <p>Boundary layer physics, Bohm criterion, and ion acceleration.</p>
+      </a>
+      <a class="card" href="topics/electrospinning.html">
+        <h2>Electrospinning</h2>
+        <p>Charged jets, Taylor cone formation, and nanofiber production.</p>
+      </a>
+      <a class="card" href="topics/quantum-dot.html">
+        <h2>Quantum Dot</h2>
+        <p>Quantum confinement, tunable emission, and device applications.</p>
+      </a>
+      <a class="card" href="topics/thermocouple.html">
+        <h2>Thermocouple</h2>
+        <p>Seebeck effect basics, calibration, and industrial temperature sensing.</p>
+      </a>
+      <a class="card" href="topics/ecr-plasma.html">
+        <h2>ECR Plasma</h2>
+        <p>Electron cyclotron resonance heating and high-density plasma generation.</p>
+      </a>
+    </section>
+
+    <footer>
+      Tip: Add supporting diagrams to <code>assets/images/</code> and reference them from each topic page.
+    </footer>
+  </main>
+</body>
+</html>
