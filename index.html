@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECR Plasma 기반 반도체 공정 기술 발표</title>
+  <style>
+    :root {
+      --bg: #06090f;
+      --panel: #0f1724;
+      --panel-2: #131f31;
+      --line: #2e4a72;
+      --text: #e6f0ff;
+      --muted: #97abc8;
+      --accent: #49b3ff;
+      --accent-2: #7ef0ff;
+      --warn: #ffc857;
+      --danger: #ff6b7a;
+      --ok: #65d6a4;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Noto Sans KR", "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, #11335a 0%, transparent 22%),
+        radial-gradient(circle at 85% 15%, #0f2f48 0%, transparent 25%),
+        linear-gradient(165deg, var(--bg), #03060b 65%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 72px 24px 52px;
+      border-bottom: 1px solid rgba(126, 240, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 38px,
+        rgba(126, 240, 255, 0.03) 39px
+      );
+      pointer-events: none;
+    }
+
+    .container {
+      width: min(1100px, 92vw);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(1.8rem, 3.6vw, 3.2rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      margin-top: 16px;
+      color: var(--muted);
+      max-width: 900px;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(6, 10, 16, 0.85);
+      border-bottom: 1px solid rgba(73, 179, 255, 0.2);
+    }
+
+    nav ul {
+      margin: 0;
+      padding: 10px 0;
+      list-style: none;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.93rem;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--text);
+      border-color: rgba(126, 240, 255, 0.35);
+      background: rgba(73, 179, 255, 0.1);
+    }
+
+    main {
+      padding: 36px 0 70px;
+    }
+
+    section {
+      margin: 22px 0;
+      padding: 24px;
+      border: 1px solid rgba(126, 240, 255, 0.16);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(13, 22, 34, 0.86), rgba(10, 16, 25, 0.9));
+      box-shadow: inset 0 0 0 1px rgba(73, 179, 255, 0.08), 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    h2 {
+      margin-top: 0;
+      letter-spacing: 0.03em;
+      font-size: 1.35rem;
+      border-left: 4px solid var(--accent);
+      padding-left: 12px;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      color: var(--accent-2);
+      font-size: 1.05rem;
+    }
+
+    p, li {
+      color: #d6e4fa;
+    }
+
+    ul { padding-left: 20px; }
+
+    .grid-2 {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .card {
+      background: linear-gradient(165deg, rgba(19, 31, 49, 0.94), rgba(9, 17, 28, 0.94));
+      border: 1px solid rgba(73, 179, 255, 0.17);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .card ul { margin: 0; }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      color: #081120;
+      background: linear-gradient(120deg, var(--accent-2), var(--accent));
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 0.04em;
+    }
+
+    .kpi {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .kpi .metric {
+      padding: 12px;
+      border: 1px solid rgba(126, 240, 255, 0.2);
+      border-radius: 12px;
+      background: rgba(9, 17, 29, 0.85);
+    }
+
+    .metric strong {
+      font-size: 1.25rem;
+      display: block;
+      color: var(--accent-2);
+    }
+
+    .sim-wrap {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 20px;
+    }
+
+    .controls {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      display: grid;
+      gap: 6px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .readout {
+      font-family: "Consolas", "Menlo", monospace;
+      font-size: 0.88rem;
+      background: #050b14;
+      border: 1px solid rgba(73, 179, 255, 0.24);
+      border-radius: 10px;
+      padding: 12px;
+      color: #cce2ff;
+      min-height: 98px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 280px;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid rgba(126, 240, 255, 0.2);
+      background: linear-gradient(180deg, #040913, #081529);
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .dot {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    footer {
+      margin-top: 28px;
+      color: #8aa3c6;
+      font-size: 0.86rem;
+      text-align: center;
+      padding-bottom: 30px;
+    }
+
+    @media (max-width: 860px) {
+      .sim-wrap { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1 class="title">ECR Plasma 기반 반도체 공정 기술</h1>
+      <p class="subtitle">
+        Electron Cyclotron Resonance(ECR) 플라즈마는 낮은 압력에서 고밀도 플라즈마를 안정적으로 형성하여,
+        미세 패턴 식각·증착의 정밀도를 높이는 핵심 기술입니다.
+        본 페이지는 발표 자료 형태로 원리부터 응용 및 향후 동향까지를 다룹니다.
+      </p>
+    </div>
+  </header>
+
+  <nav>
+    <div class="container">
+      <ul>
+        <li><a href="#principle">원리</a></li>
+        <li><a href="#advantages">장점</a></li>
+        <li><a href="#limits">단점·한계</a></li>
+        <li><a href="#applications">공정 응용</a></li>
+        <li><a href="#simulation">인터랙티브 시뮬레이션</a></li>
+        <li><a href="#future">추후 동향</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <section id="principle">
+        <h2>1) ECR Plasma 원리</h2>
+        <div class="grid-2">
+          <div class="card">
+            <span class="tag">PHYSICS</span>
+            <h3>공명 조건</h3>
+            <p>
+              전자는 자기장 내에서 사이클로트론 운동을 하며, 이 회전 주파수와 마이크로파 주파수(보통 2.45GHz)가 일치할 때
+              에너지 흡수가 극대화됩니다. 이 상태가 ECR 조건이며 전자 온도 및 이온화 효율을 크게 향상시킵니다.
+            </p>
+          </div>
+          <div class="card">
+            <span class="tag">PROCESS</span>
+            <h3>공정 챔버 동작</h3>
+            <ul>
+              <li>가스 주입 → 저압 유지(수 mTorr ~ 수십 mTorr)</li>
+              <li>마이크로파 인가 및 자기장 형성</li>
+              <li>고밀도 플라즈마 생성</li>
+              <li>기판 바이어스 제어로 이온 방향성 확보</li>
+            </ul>
+          </div>
+        </div>
+        <div class="kpi">
+          <div class="metric"><strong>10¹¹~10¹² cm⁻³</strong>고밀도 플라즈마 영역</div>
+          <div class="metric"><strong>저압 운전</strong>충돌 손실 감소 / 방향성 개선</div>
+          <div class="metric"><strong>독립 제어</strong>플라즈마 밀도와 이온 에너지 분리 제어 가능</div>
+        </div>
+      </section>
+
+      <section id="advantages">
+        <h2>2) 장점</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>고종횡비 식각 대응</h3>
+            <p>이온 방향성이 우수하여 깊고 좁은 패턴에서 프로파일 제어가 유리합니다.</p>
+          </div>
+          <div class="card">
+            <h3>저손상 공정</h3>
+            <p>저압·고밀도 조건에서 불필요한 중성종 충돌을 줄이고, 민감한 층에 대한 플라즈마 손상을 완화합니다.</p>
+          </div>
+          <div class="card">
+            <h3>높은 공정 균일도 잠재력</h3>
+            <p>자기장 및 주입 구조 최적화 시 웨이퍼 전면에서 균일한 처리 특성을 기대할 수 있습니다.</p>
+          </div>
+          <div class="card">
+            <h3>공정 창(Process Window) 확대</h3>
+            <p>가스 조성, 바이어스, 자기장 조건의 조합으로 선택비·식각률·형상을 폭넓게 조절할 수 있습니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="limits">
+        <h2>3) 단점과 한계</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="color: var(--warn)">장비 복잡도 및 CAPEX</h3>
+            <ul>
+              <li>마그넷/전자석, 마이크로파 소스, 매칭 구조가 복잡</li>
+              <li>초기 투자비와 유지보수 비용 부담</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 style="color: var(--danger)">균일도 튜닝 난이도</h3>
+            <ul>
+              <li>챔버 형상 및 자기장 분포가 미세 불균일을 유발</li>
+              <li>레시피 스케일업 시 재현성 확보가 과제</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 style="color: var(--warn)">소재별 손상 메커니즘</h3>
+            <p>차세대 저유전율(Low-k), 2D 소재 등은 미세한 이온/라디칼 플럭스 변화에도 물성 열화가 발생할 수 있습니다.</p>
+          </div>
+          <div class="card">
+            <h3 style="color: var(--danger)">운영 전문성 요구</h3>
+            <p>플라즈마 물리, RF/마이크로파, 장비 엔지니어링을 통합적으로 이해한 인력이 필요합니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="applications">
+        <h2>4) 공정 응용</h2>
+        <div class="grid-2">
+          <div class="card">
+            <span class="tag">ETCH</span>
+            <h3>고정밀 식각</h3>
+            <p>게이트 패턴, 컨택 홀, TSV 등에서 수직도 및 CD 제어가 중요한 공정에 활용됩니다.</p>
+          </div>
+          <div class="card">
+            <span class="tag">DEPOSITION</span>
+            <h3>박막 증착 보조</h3>
+            <p>플라즈마 활성종을 이용해 저온 조건에서도 반응성을 확보하여 고품질 박막 형성에 기여합니다.</p>
+          </div>
+          <div class="card">
+            <span class="tag">SURFACE</span>
+            <h3>표면 개질·클리닝</h3>
+            <p>표면 오염 제거, 활성화 처리, 계면 특성 제어를 통해 후속 공정 수율을 향상합니다.</p>
+          </div>
+          <div class="card">
+            <span class="tag">ADVANCED</span>
+            <h3>차세대 패키징</h3>
+            <p>3D 적층 및 이종 집적 공정에서 미세 피처 처리와 저손상 계면 제어 용도로 검토됩니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="simulation">
+        <h2>5) 인터랙티브 시뮬레이션</h2>
+        <p>
+          아래 슬라이더로 <strong>자기장(B)</strong>, <strong>마이크로파 파워(P)</strong>, <strong>챔버 압력</strong>을 조절하면,
+          단순화 모델 기반으로 플라즈마 밀도·이온 에너지·상대 식각률이 어떻게 변하는지 시각화합니다.
+        </p>
+        <div class="sim-wrap">
+          <div class="controls">
+            <label>자기장 (Gauss): <span id="bVal">875</span>
+              <input id="bField" type="range" min="600" max="1100" value="875" />
+            </label>
+            <label>마이크로파 파워 (W): <span id="pVal">800</span>
+              <input id="power" type="range" min="300" max="1600" value="800" />
+            </label>
+            <label>챔버 압력 (mTorr): <span id="prVal">8</span>
+              <input id="pressure" type="range" min="2" max="40" value="8" />
+            </label>
+            <div class="readout" id="readout"></div>
+          </div>
+          <div>
+            <canvas id="simCanvas" width="540" height="300"></canvas>
+            <div class="legend">
+              <span><span class="dot" style="background:#7ef0ff"></span>플라즈마 밀도</span>
+              <span><span class="dot" style="background:#ffc857"></span>이온 에너지</span>
+              <span><span class="dot" style="background:#65d6a4"></span>상대 식각률</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="future">
+        <h2>6) 추후 동향</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>AI 기반 레시피 최적화</h3>
+            <p>센서 데이터와 공정 결과를 학습해 플라즈마 상태를 예측하고, 균일도·선택비를 실시간 보정하는 방향으로 발전 중입니다.</p>
+          </div>
+          <div class="card">
+            <h3>디지털 트윈 공정 제어</h3>
+            <p>챔버의 전자기장·유동·반응 모델을 통합한 가상 공정을 통해 개발 기간 단축과 수율 안정화를 추구합니다.</p>
+          </div>
+          <div class="card">
+            <h3>저손상·친환경 플라즈마</h3>
+            <p>민감 소재 대응을 위해 이온 에너지 분포 제어가 정교해지고, 대체 가스 적용으로 환경 부담 감소가 요구됩니다.</p>
+          </div>
+          <div class="card">
+            <h3>고집적 패키징/신소재 대응</h3>
+            <p>2.5D/3D 패키징, 차세대 메모리, 화합물 반도체 공정에서 ECR의 정밀 공정 역량이 더욱 중요해질 전망입니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        Engineering Presentation Template · ECR Plasma for Semiconductor Manufacturing
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    const bField = document.getElementById('bField');
+    const power = document.getElementById('power');
+    const pressure = document.getElementById('pressure');
+
+    const bVal = document.getElementById('bVal');
+    const pVal = document.getElementById('pVal');
+    const prVal = document.getElementById('prVal');
+
+    const readout = document.getElementById('readout');
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function clamp(v, min, max) {
+      return Math.max(min, Math.min(max, v));
+    }
+
+    function simulate(B, P, Pr) {
+      // ECR 공명 자기장(2.45 GHz 기준) 근방에서 효율 최대화되는 단순화 지수
+      const resonance = Math.exp(-Math.pow((B - 875) / 130, 2));
+      const pressureFactor = 1 / (1 + 0.06 * Pr);
+      const powerFactor = Math.pow(P / 800, 0.78);
+
+      const plasmaDensity = clamp(0.45 + 0.9 * resonance * powerFactor * pressureFactor, 0.12, 1.8);
+      const ionEnergy = clamp(0.35 + 0.65 * (P / 1200) * (1 / Math.sqrt(Pr / 6 + 0.6)), 0.1, 1.4);
+      const etchRate = clamp(0.3 + plasmaDensity * 0.62 + ionEnergy * 0.35, 0.1, 2.2);
+
+      return { plasmaDensity, ionEnergy, etchRate, resonance };
+    }
+
+    function drawBars(values) {
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // grid
+      ctx.strokeStyle = 'rgba(130,180,255,0.15)';
+      ctx.lineWidth = 1;
+      for (let i = 1; i < 6; i++) {
+        const y = (h / 6) * i;
+        ctx.beginPath();
+        ctx.moveTo(38, y);
+        ctx.lineTo(w - 18, y);
+        ctx.stroke();
+      }
+
+      const data = [
+        { label: 'Density', v: values.plasmaDensity, c: '#7ef0ff' },
+        { label: 'Ion E', v: values.ionEnergy, c: '#ffc857' },
+        { label: 'Etch', v: values.etchRate, c: '#65d6a4' }
+      ];
+
+      const maxV = 2.2;
+      const startX = 90;
+      const gap = 130;
+      const barW = 74;
+      const baseY = h - 34;
+
+      ctx.font = '13px Consolas';
+      ctx.fillStyle = '#bfd6f7';
+      ctx.fillText('상대 지표 (a.u.)', 14, 20);
+
+      data.forEach((d, i) => {
+        const x = startX + i * gap;
+        const barH = (d.v / maxV) * (h - 84);
+
+        const grad = ctx.createLinearGradient(0, baseY - barH, 0, baseY);
+        grad.addColorStop(0, d.c);
+        grad.addColorStop(1, 'rgba(255,255,255,0.1)');
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, baseY - barH, barW, barH);
+
+        ctx.strokeStyle = 'rgba(208,227,255,0.45)';
+        ctx.strokeRect(x, baseY - barH, barW, barH);
+
+        ctx.fillStyle = '#dcedff';
+        ctx.fillText(d.label, x + 8, baseY + 20);
+        ctx.fillText(d.v.toFixed(2), x + 14, baseY - barH - 8);
+      });
+    }
+
+    function update() {
+      const B = Number(bField.value);
+      const P = Number(power.value);
+      const Pr = Number(pressure.value);
+
+      bVal.textContent = B;
+      pVal.textContent = P;
+      prVal.textContent = Pr;
+
+      const r = simulate(B, P, Pr);
+      drawBars(r);
+
+      readout.textContent =
+`[SIM STATUS]
+B-field          : ${B} Gauss
+Microwave Power  : ${P} W
+Pressure         : ${Pr} mTorr
+Resonance Index  : ${(r.resonance * 100).toFixed(1)} %
+Estimated Note   : 공명 근접 + 저압일수록 고밀도 플라즈마 형성 경향`;
+    }
+
+    [bField, power, pressure].forEach(el => el.addEventListener('input', update));
+    update();
+  </script>
+</body>
+</html>
