@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plasma Sheath Interactive Presentation</title>
+  <style>
+    :root {
+      --bg: #070b1a;
+      --bg2: #111935;
+      --card: rgba(20, 31, 63, 0.78);
+      --text: #eaf1ff;
+      --muted: #9db0d8;
+      --accent: #69a4ff;
+      --good: #69e3b5;
+      --warn: #ffd783;
+      --danger: #ff9b9b;
+      --border: rgba(137, 167, 221, 0.3);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 15% 15%, #1a2a56, var(--bg) 30%), linear-gradient(145deg, var(--bg), var(--bg2));
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.2rem;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(7, 11, 26, 0.75);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+    }
+
+    .back-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .back-link:hover { text-decoration: underline; }
+
+    .hero {
+      padding: 2.8rem 0 1.4rem;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .hero h1 {
+      margin: 0 0 0.7rem;
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      line-height: 1.2;
+    }
+
+    .hero p { color: var(--muted); }
+
+    .hero-panel,
+    .section,
+    .metric,
+    .sim-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+    }
+
+    .hero-panel { padding: 1rem 1.1rem; }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+
+    .tag {
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.7rem;
+      margin-top: 0.8rem;
+    }
+
+    .metric {
+      padding: 0.9rem;
+      transition: transform .2s ease, border-color .2s ease;
+    }
+
+    .metric:hover { transform: translateY(-4px); border-color: var(--accent); }
+
+    .metric .label { color: var(--muted); font-size: 0.8rem; }
+    .metric .value { font-size: 1.2rem; font-weight: 700; }
+
+    .sections {
+      display: grid;
+      gap: 1rem;
+      margin: 0.6rem 0 2rem;
+    }
+
+    .section {
+      padding: 1rem 1.1rem;
+      transition: transform .25s ease, border-color .25s ease;
+    }
+
+    .section:hover { transform: translateY(-3px); border-color: var(--accent); }
+    .section h2 { margin: 0 0 0.5rem; font-size: 1.2rem; }
+    .section p, .section li { color: #d8e3ff; }
+
+    .split {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .cards {
+      display: grid;
+      gap: 0.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+
+    .mini-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.8rem;
+      background: rgba(14, 22, 49, 0.7);
+      transition: transform .2s ease, border-color .2s ease;
+    }
+
+    .mini-card:hover { transform: translateY(-4px) scale(1.01); border-color: var(--accent); }
+
+    .sim-wrap {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1.1fr .9fr;
+    }
+
+    .sim-card { padding: 0.9rem; }
+    .sim-controls label { display: block; margin-bottom: .2rem; color: var(--muted); font-size: .88rem; }
+    .sim-controls input[type="range"] { width: 100%; }
+
+    .sim-output {
+      margin-top: 0.5rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+    }
+
+    .sim-stat {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.65rem;
+      background: rgba(8, 13, 30, 0.6);
+    }
+
+    canvas {
+      width: 100%;
+      height: 280px;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(14, 21, 46, 0.95), rgba(8, 12, 28, 0.95));
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .good { color: var(--good); }
+    .warn { color: var(--warn); }
+    .danger { color: var(--danger); }
+
+    @media (max-width: 900px) {
+      .hero, .split, .sim-wrap { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="back-link" href="../index.html">← 메인 랜딩으로</a>
+      <strong>Plasma Sheath · Interactive Deck</strong>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero reveal">
+      <div class="hero-panel">
+        <h1>Plasma Sheath: 경계층 물리와 공정 제어</h1>
+        <p>
+          플라즈마-고체 계면에서 형성되는 sheath는 이온 에너지, 입사 각도, 표면 반응을 좌우하는 핵심 영역입니다.
+          본 페이지는 발표용으로 주요 개념과 공정적 의미를 인터랙티브하게 요약합니다.
+        </p>
+        <div class="tag-row">
+          <span class="tag">Bohm Criterion</span>
+          <span class="tag">Ion Acceleration</span>
+          <span class="tag">Surface Engineering</span>
+          <span class="tag">Process Window</span>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <h3>핵심 지표</h3>
+        <div class="metrics">
+          <article class="metric"><div class="label">Typical Sheath Thickness</div><div class="value" id="m-thickness">1.00 mm</div></article>
+          <article class="metric"><div class="label">Ion Impact Energy</div><div class="value" id="m-energy">32.0 eV</div></article>
+          <article class="metric"><div class="label">Potential Drop</div><div class="value" id="m-potential">40.0 V</div></article>
+        </div>
+      </div>
+    </section>
+
+    <div class="sections">
+      <section class="section reveal" id="principle">
+        <h2>1) 원리 (Principle)</h2>
+        <p>
+          전자가 이온보다 훨씬 빠르게 벽으로 손실되면서 벽 근처는 음전위가 되고, 이온을 끌어당기는 전기장이 형성됩니다.
+          이때 형성되는 비중성 전하층이 sheath입니다.
+        </p>
+      </section>
+
+      <section class="section reveal" id="structure">
+        <h2>2) 구조 (Structure)</h2>
+        <div class="cards">
+          <article class="mini-card"><strong>Bulk Plasma</strong><p>준중성 유지, 낮은 전기장.</p></article>
+          <article class="mini-card"><strong>Pre-sheath</strong><p>이온을 Bohm 속도로 가속.</p></article>
+          <article class="mini-card"><strong>Sheath</strong><p>급격한 전위 강하와 이온 가속.</p></article>
+          <article class="mini-card"><strong>Wall Interface</strong><p>표면 반응/2차전자 방출 결정.</p></article>
+        </div>
+      </section>
+
+      <section class="section reveal" id="advantages">
+        <h2>3) 장점 (Advantages)</h2>
+        <ul>
+          <li><span class="good">고방향성 이온 입사</span>로 미세 패턴 식각 이방성 향상.</li>
+          <li>입자 에너지 제어를 통해 박막 밀도/접착력 최적화.</li>
+          <li>바이어스 조건 변화로 공정 윈도우를 넓게 설계 가능.</li>
+        </ul>
+      </section>
+
+      <section class="section reveal" id="limitations">
+        <h2>4) 단점/한계 (Limitations)</h2>
+        <ul>
+          <li><span class="danger">과도한 이온 에너지</span>는 표면 손상과 결함을 증가시킬 수 있음.</li>
+          <li>플라즈마 불균일 시 wafer 내 energy distribution 편차 확대.</li>
+          <li>저압/고밀도 조건에서 진단 난이도 및 모델 불확실성 증가.</li>
+        </ul>
+      </section>
+
+      <section class="section reveal" id="applications">
+        <h2>5) 응용 (Applications)</h2>
+        <div class="split">
+          <div>
+            <h4>반도체 공정</h4>
+            <p>RIE, ICP 식각, 플라즈마 세정, ALD 전처리에서 표면 반응성과 손상 제어에 핵심 역할을 수행합니다.</p>
+          </div>
+          <div>
+            <h4>재료/에너지</h4>
+            <p>표면 활성화, 기능성 코팅, 배터리 전극 개질, 바이오소재 표면 친수성 제어에도 활용됩니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal" id="simulation">
+        <h2>6) 시뮬레이션 (Interactive Simulation)</h2>
+        <p>슬라이더를 조절하면 sheath 두께, 전위 강하, 이온 에너지 지표와 전위 프로파일 그래프가 즉시 변경됩니다.</p>
+        <div class="sim-wrap">
+          <div class="sim-card sim-controls">
+            <label for="density">전자밀도 n<sub>e</sub> (상대값)</label>
+            <input id="density" type="range" min="1" max="10" step="1" value="4" />
+
+            <label for="te">전자온도 T<sub>e</sub> (eV)</label>
+            <input id="te" type="range" min="1" max="8" step="0.5" value="3" />
+
+            <label for="bias">벽 바이어스 |V<sub>bias</sub>| (V)</label>
+            <input id="bias" type="range" min="10" max="120" step="2" value="40" />
+
+            <div class="sim-output">
+              <div class="sim-stat"><strong>Sheath Thickness</strong><br /><span id="o-thickness">1.00 mm</span></div>
+              <div class="sim-stat"><strong>Ion Energy</strong><br /><span id="o-energy">32.0 eV</span></div>
+              <div class="sim-stat"><strong>Potential Drop</strong><br /><span id="o-drop">40.0 V</span></div>
+              <div class="sim-stat"><strong>Regime</strong><br /><span id="o-regime" class="warn">Transition</span></div>
+            </div>
+          </div>
+          <div class="sim-card">
+            <canvas id="plot" width="500" height="320" aria-label="Potential profile plot"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal" id="future-trend">
+        <h2>7) 추후동향 (Future Trends)</h2>
+        <ul>
+          <li>디지털 트윈 기반 sheath parameter 실시간 역추정.</li>
+          <li>RF waveform engineering으로 IEDF(ion energy distribution function) 정밀 제어.</li>
+          <li>AI-assisted plasma control과 in-situ diagnostic 결합 가속.</li>
+        </ul>
+      </section>
+
+      <section class="section reveal" id="summary">
+        <h2>8) 정리 (Takeaways)</h2>
+        <p>
+          sheath는 플라즈마 공정 결과를 결정하는 최종 에너지 게이트입니다.
+          전자밀도·전자온도·바이어스의 상호작용을 이해하면 손상 최소화와 선택비 향상을 동시에 달성할 수 있습니다.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const densityEl = document.getElementById('density');
+    const teEl = document.getElementById('te');
+    const biasEl = document.getElementById('bias');
+
+    const thicknessOut = document.getElementById('o-thickness');
+    const energyOut = document.getElementById('o-energy');
+    const dropOut = document.getElementById('o-drop');
+    const regimeOut = document.getElementById('o-regime');
+
+    const mThickness = document.getElementById('m-thickness');
+    const mEnergy = document.getElementById('m-energy');
+    const mPotential = document.getElementById('m-potential');
+
+    const canvas = document.getElementById('plot');
+    const ctx = canvas.getContext('2d');
+
+    function computeModel() {
+      const n = Number(densityEl.value);
+      const te = Number(teEl.value);
+      const vb = Number(biasEl.value);
+
+      // Simplified presentation model (not for design-grade prediction)
+      const thicknessMm = (2.4 * Math.sqrt(te) / Math.sqrt(n)).toFixed(2);
+      const potentialDrop = vb.toFixed(1);
+      const ionEnergy = (0.8 * vb + 2.5 * te).toFixed(1);
+
+      let regime = 'Transition';
+      let cls = 'warn';
+      if (vb >= 70 && te <= 4) { regime = 'Ion-dominated'; cls = 'good'; }
+      if (te >= 6 && vb <= 35) { regime = 'Electron-loss sensitive'; cls = 'danger'; }
+
+      thicknessOut.textContent = `${thicknessMm} mm`;
+      energyOut.textContent = `${ionEnergy} eV`;
+      dropOut.textContent = `${potentialDrop} V`;
+      regimeOut.textContent = regime;
+      regimeOut.className = cls;
+
+      mThickness.textContent = `${thicknessMm} mm`;
+      mEnergy.textContent = `${ionEnergy} eV`;
+      mPotential.textContent = `${potentialDrop} V`;
+
+      drawProfile(n, te, vb);
+    }
+
+    function drawProfile(n, te, vb) {
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // grid
+      ctx.strokeStyle = 'rgba(140, 172, 235, 0.2)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 5; i++) {
+        const y = 20 + (h - 40) * (i / 5);
+        ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w - 20, y); ctx.stroke();
+      }
+      for (let i = 0; i <= 6; i++) {
+        const x = 40 + (w - 60) * (i / 6);
+        ctx.beginPath(); ctx.moveTo(x, 20); ctx.lineTo(x, h - 20); ctx.stroke();
+      }
+
+      // axes
+      ctx.strokeStyle = '#b9d0ff';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(40, 20);
+      ctx.lineTo(40, h - 20);
+      ctx.lineTo(w - 20, h - 20);
+      ctx.stroke();
+
+      // labels
+      ctx.fillStyle = '#d7e5ff';
+      ctx.font = '12px Arial';
+      ctx.fillText('Potential (V)', 8, 16);
+      ctx.fillText('Distance to wall', w - 115, h - 4);
+
+      // potential curve
+      const sheathNorm = Math.min(0.65, 0.16 + (vb / 180) + (te / 30) - (n / 40));
+      ctx.strokeStyle = '#69a4ff';
+      ctx.lineWidth = 2.8;
+      ctx.beginPath();
+      for (let i = 0; i <= 180; i++) {
+        const xn = i / 180;
+        const x = 40 + (w - 60) * xn;
+        let yn;
+        if (xn < 1 - sheathNorm) {
+          yn = 0.06 * Math.sin(xn * 12); // quasi-neutral fluctuation
+        } else {
+          const t = (xn - (1 - sheathNorm)) / sheathNorm;
+          yn = -Math.pow(t, 1.8) * (vb / 120);
+        }
+        const y = (h - 20) - (h - 40) * (0.5 + yn * 0.7);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // sheath marker
+      const xSheath = 40 + (w - 60) * (1 - sheathNorm);
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = '#ffd783';
+      ctx.beginPath();
+      ctx.moveTo(xSheath, 20);
+      ctx.lineTo(xSheath, h - 20);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#ffe6a8';
+      ctx.fillText('Sheath Edge', xSheath - 30, 34);
+    }
+
+    [densityEl, teEl, biasEl].forEach(el => el.addEventListener('input', computeModel));
+    computeModel();
+
+    // Scroll reveal animation
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('show');
+      });
+    }, { threshold: 0.18 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
