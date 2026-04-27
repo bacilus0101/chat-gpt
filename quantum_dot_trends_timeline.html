@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>퀀텀닷 연구 및 산업 동향</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+      line-height: 1.7;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+      border-radius: 24px;
+      padding: 40px 32px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+      margin-bottom: 28px;
+    }
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 2.2rem;
+    }
+    .hero p {
+      margin: 0;
+      font-size: 1.05rem;
+      opacity: 0.95;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 24px 0 36px;
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+    .card h3 {
+      margin-top: 0;
+      font-size: 1.05rem;
+      color: #1d4ed8;
+    }
+    .section-title {
+      margin: 42px 0 18px;
+      font-size: 1.6rem;
+      color: #111827;
+    }
+    .timeline {
+      position: relative;
+      padding-left: 26px;
+      margin-top: 20px;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(#60a5fa, #1d4ed8);
+      border-radius: 999px;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 22px;
+      padding: 22px 22px 22px 24px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.07);
+      border: 1px solid #e5e7eb;
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -25px;
+      top: 28px;
+      width: 14px;
+      height: 14px;
+      background: #2563eb;
+      border: 4px solid #dbeafe;
+      border-radius: 50%;
+    }
+    .year {
+      display: inline-block;
+      padding: 6px 12px;
+      background: #dbeafe;
+      color: #1e3a8a;
+      border-radius: 999px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+    }
+    .timeline-item h3 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+    .timeline-item ul {
+      margin: 10px 0 0 18px;
+      padding: 0;
+    }
+    .timeline-item li { margin-bottom: 6px; }
+    .badge-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .badge {
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      border: 1px solid #bfdbfe;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.07);
+      border: 1px solid #e5e7eb;
+    }
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+    }
+    th {
+      background: #eff6ff;
+      color: #1e3a8a;
+      font-weight: 700;
+    }
+    tr:last-child td { border-bottom: none; }
+    .footer-note {
+      margin-top: 26px;
+      padding: 18px 20px;
+      background: #eef2ff;
+      border-left: 5px solid #4f46e5;
+      border-radius: 14px;
+      color: #312e81;
+    }
+    .qd-sim {
+      margin-top: 28px;
+      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+      color: white;
+      border-radius: 24px;
+      padding: 28px 24px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+      overflow: hidden;
+    }
+    .qd-sim h3 {
+      margin: 0 0 10px;
+      font-size: 1.4rem;
+      color: #fff;
+    }
+    .qd-sim-intro {
+      margin: 0 0 18px;
+      color: rgba(255,255,255,0.88);
+    }
+    .qd-sim-note {
+      margin: 0 0 20px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.92);
+      font-size: 0.98rem;
+    }
+    .qd-sim-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+    .qd-panel {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+    .qd-control-box {
+      margin-bottom: 18px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .qd-control-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .qd-control-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      font-weight: 700;
+      color: #fff;
+    }
+    .qd-slider {
+      width: 100%;
+      appearance: none;
+      height: 12px;
+      border-radius: 999px;
+      outline: none;
+      background: linear-gradient(90deg, #2563eb 0%, #16a34a 50%, #dc2626 100%);
+    }
+    .qd-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #0f172a;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      cursor: pointer;
+    }
+    .qd-slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #0f172a;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      cursor: pointer;
+    }
+    .qd-scale {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.84rem;
+      color: rgba(255,255,255,0.76);
+    }
+    .qd-stage {
+      position: relative;
+      min-height: 460px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .qd-stage-top {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 16px;
+      align-items: center;
+    }
+    .qd-dot-area {
+      min-height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.08), rgba(255,255,255,0.02) 60%, transparent 80%);
+      border: 1px dashed rgba(255,255,255,0.12);
+    }
+    .qd-dot {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      position: relative;
+      transition: width 0.15s ease, height 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: inset -10px -12px 18px rgba(255,255,255,0.14), inset 12px 14px 20px rgba(0,0,0,0.2), 0 0 28px currentColor;
+      animation: qdFloat 4s ease-in-out infinite;
+    }
+    .qd-dot::after {
+      content: "";
+      position: absolute;
+      top: 14%;
+      left: 18%;
+      width: 24%;
+      height: 24%;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.34);
+      filter: blur(1px);
+    }
+    .qd-dot-caption {
+      margin-top: 12px;
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      font-weight: 700;
+    }
+    .energy-visual {
+      height: 250px;
+      border-radius: 18px;
+      padding: 16px 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .band-diagram {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .band-line {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 0 12px rgba(255,255,255,0.2);
+    }
+    .band-line.top { top: 24%; }
+    .band-line.bottom { bottom: 24%; }
+    .band-gap-bracket {
+      position: absolute;
+      right: 18px;
+      width: 30px;
+      border-left: 3px solid rgba(255,255,255,0.88);
+      border-top: 3px solid rgba(255,255,255,0.88);
+      border-bottom: 3px solid rgba(255,255,255,0.88);
+      border-radius: 10px 0 0 10px;
+      transition: top 0.15s ease, height 0.15s ease;
+    }
+    .band-gap-label {
+      position: absolute;
+      right: 56px;
+      transform: translateY(-50%);
+      font-weight: 700;
+      color: #fff;
+      transition: top 0.15s ease;
+    }
+    .qd-wave {
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2563eb 0%, #16a34a 50%, #dc2626 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .qd-wave::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      animation: qdSweep 2.6s linear infinite;
+    }
+    .qd-readouts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .qd-readout {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .qd-readout-label {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 4px;
+    }
+    .qd-readout-value {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .qd-color-box {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+    }
+    .qd-color-preview {
+      height: 64px;
+      border-radius: 16px;
+      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+      transition: background 0.15s ease;
+    }
+    @keyframes qdFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes qdSweep {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    @media (max-width: 900px) {
+      .qd-sim-layout {
+        grid-template-columns: 1fr;
+      }
+      .qd-stage-top {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 768px) {
+      .qd-readouts {
+        grid-template-columns: 1fr;
+      }
+      .qd-scale {
+        font-size: 0.74rem;
+      }
+
+      .hero h1 { font-size: 1.8rem; }
+      .container { padding: 24px 14px 60px; }
+      .hero { padding: 28px 20px; }
+      .timeline { padding-left: 22px; }
+      .timeline-item::before { left: -21px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1>퀀텀닷 연구 및 산업 동향 정리</h1>
+      <p>
+        퀀텀닷(Quantum Dot)은 특정 기업만의 기술이 아니라, 대학·연구소·기업이 함께 발전시켜 온 기술이다.
+        초기에는 기초 과학 연구 중심이었고, 이후 디스플레이 상용화와 차세대 자발광 기술(QD-OLED, QNED, QDEL)로 확장되었다.
+      </p>
+    </section>
+
+    <section class="card" style="margin-top:20px;">
+      <h2 class="section-title" style="margin-top:0">퀀텀닷 기본 개념</h2>
+      <p>
+        <strong>퀀텀닷(Quantum Dot)</strong>은 약 <strong>2~10 nm 크기의 반도체 나노입자</strong>로, 크기가 매우 작기 때문에 일반적인 벌크 반도체와 다른 전자·광학 특성을 가진다.
+      </p>
+
+      <h3>핵심 특징</h3>
+      <ul>
+        <li>전자와 정공이 작은 공간에 갇히면서 <strong>양자 구속 효과</strong>가 발생</li>
+        <li>입자의 <strong>크기에 따라 밴드갭(Band Gap)이 변화</strong></li>
+        <li>그 결과 <strong>방출하는 빛의 색이 달라짐</strong></li>
+      </ul>
+
+      <h3>양자 구속 효과 (Quantum Confinement Effect)</h3>
+      <p>
+        나노 크기의 공간에 전자가 갇히면 에너지 준위가 양자화되면서 물질의 광학 특성이 변한다.
+        퀀텀닷에서는 이 현상 때문에 입자 크기에 따라 방출되는 빛의 파장이 달라진다.
+      </p>
+
+      <ul>
+        <li><strong>작은 퀀텀닷</strong> → 큰 Band Gap → 높은 에너지 → <strong>Blue (짧은 파장)</strong></li>
+        <li><strong>중간 크기</strong> → 중간 Band Gap → <strong>Green</strong></li>
+        <li><strong>큰 퀀텀닷</strong> → 작은 Band Gap → 낮은 에너지 → <strong>Red (긴 파장)</strong></li>
+      </ul>
+
+      <h3>주요 응용</h3>
+      <ul>
+        <li>디스플레이 (QLED, QD‑OLED)</li>
+        <li>바이오 이미징 및 의료 진단</li>
+        <li>태양전지 및 에너지 소재</li>
+      </ul>
+
+      <p>
+        즉, 퀀텀닷은 <strong>입자 크기만으로 빛의 색을 조절할 수 있는 나노 광전자 소재</strong>로,
+        디스플레이부터 의료·에너지 분야까지 다양한 산업에서 활용되고 있다.
+      </p>
+    </section>
+
+    <section class="summary-grid">
+      <div class="card">
+        <h3>핵심 흐름 1</h3>
+        <p>1980~1990년대에는 양자 구속 효과와 균일 합성 기술이 정립되며 기초 연구 기반이 형성되었다.</p>
+      </div>
+      <div class="card">
+        <h3>핵심 흐름 2</h3>
+        <p>2000~2010년대에는 디스플레이 응용과 카드뮴 프리 소재 개발이 활발해지며 산업 진입이 본격화되었다.</p>
+      </div>
+      <div class="card">
+        <h3>핵심 흐름 3</h3>
+        <p>2020년대에는 QD-OLED 상용화, QNED 도전, QDEL 연구 확대 등 차세대 디스플레이 경쟁이 진행 중이다.</p>
+      </div>
+      <div class="card">
+        <h3>핵심 흐름 4</h3>
+        <p>삼성 외에도 MIT, Bell Labs, Fraunhofer, Sony, Nanosys, Nanoco 등 다양한 기관이 핵심 역할을 수행했다.</p>
+      </div>
+    </section>
+
+    <h2 class="section-title">연도별 동향</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="year">1980년대</div>
+        <h3>퀀텀닷 개념의 출발</h3>
+        <p>반도체 나노결정에서 크기에 따라 광학 특성이 달라지는 양자 구속 효과가 확인되며 퀀텀닷 개념이 자리 잡기 시작했다.</p>
+        <ul>
+          <li>기초 과학 중심의 발견 단계</li>
+          <li>나노 입자 크기와 발광 색 변화의 상관관계 규명</li>
+        </ul>
+        <div class="badge-wrap">
+          <span class="badge">Bell Labs</span>
+          <span class="badge">Alexei Ekimov</span>
+          <span class="badge">기초 물성 연구</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="year">1990년대</div>
+        <h3>합성 기술 발전과 응용 가능성 확대</h3>
+        <p>균일한 크기의 퀀텀닷을 안정적으로 합성하는 기술이 개발되면서 연구의 재현성과 산업 응용 가능성이 크게 높아졌다.</p>
+        <ul>
+          <li>고품질 양자점 합성법 확립</li>
+          <li>연구실 수준에서 응용 연구로 확장되는 전환기</li>
+        </ul>
+        <div class="badge-wrap">
+          <span class="badge">MIT</span>
+          <span class="badge">Moungi Bawendi</span>
+          <span class="badge">합성 공정</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="year">2000년대</div>
+        <h3>디스플레이·광소자 응용 연구 시작</h3>
+        <p>대학과 연구소, 스타트업을 중심으로 퀀텀닷의 디스플레이, LED, 광학소자 적용 가능성이 본격 검토되었고 카드뮴 프리 소재 연구도 중요해졌다.</p>
+        <ul>
+          <li>디스플레이용 색변환 소재 연구</li>
+          <li>친환경 소재 개발 필요성 증가</li>
+          <li>산학연 협업 구조 형성</li>
+        </ul>
+        <div class="badge-wrap">
+          <span class="badge">Nanosys</span>
+          <span class="badge">Nanoco</span>
+          <span class="badge">Fraunhofer</span>
+          <span class="badge">University of Manchester</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="year">2010~2013</div>
+        <h3>초기 상용화 진입</h3>
+        <p>퀀텀닷이 실제 디스플레이 제품에 적용되기 시작한 시기다. TV 시장에서 색재현율 개선용 기술로 주목받으며 상용화의 문이 열렸다.</p>
+        <ul>
+          <li>퀀텀닷 디스플레이 최초 적용 사례 등장</li>
+          <li>프리미엄 TV 화질 향상 기술로 인식 확대</li>
+        </ul>
+        <div class="badge-wrap">
+          <span class="badge">Sony</span>
+          <span class="badge">QD Vision</span>
+          <span class="badge">Nanosys</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="year">2014~2017</div>
+        <h3>QLED TV 시장 형성과 카드뮴 프리 전환</h3>
+        <p>퀀텀닷은 본격적으로 프리미엄 TV 시장 핵심 기술로 자리 잡기 시작했고, 카드뮴 없는 친환경 소재 개발이 상용화에서 중요한 요소가 되었다.</p>
+        <ul>
+          <li>QLED TV 상용화 본격 확대</li>
+          <li>환경 규제 대응형 소재 개발 경쟁</li>
+          <li>디스플레이 기업 중심 경쟁 심화</li>
+        </ul>
+        <div class="badge-wrap">
+          <span class="badge">Samsung</span>
+          <span class="badge">LG</span>
+          <span class="badge">Dow Chemical</span>
+          <span class="badge">Nanoco</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="year">2018~2021</div>
+        <h3>차세대 퀀텀닷 디스플레이 연구 확대</h3>
+        <p>기존 필름 기반 QD-LCD를 넘어, QD-OLED와 전기발광 QD, 잉크젯 프린팅형 QD 디스플레이 등 차세대 기술 연구가 활발해졌다.</p>
+        <ul>
+          <li>자발광 디스플레이 후보 기술 부상</li>
+          <li>QD-OLED와 EL-QD에 대한 기대 증가</li>
+          <li>파일럿 생산 및 양산 가능성 검토</li>
+        </ul>
+        <div class="badge-wrap">
+          <span class="badge">Samsung Display</span>
+          <span class="badge">Seoul National University</span>
+          <span class="badge">Fraunhofer IAP</span>
+          <span class="badge">Merck</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="year">2022~2024</div>
+        <h3>기술 난관과 전략 전환</h3>
+        <p>차세대 퀀텀닷 자발광 기술은 높은 기대를 받았지만, 실제 제조에서는 수명, 전하 이동, 균일도, 수율 문제 등 여러 난관이 드러났다.</p>
+        <ul>
+          <li>QNED의 나노로드 정렬 및 균일 발광 문제</li>
+          <li>전기발광 퀀텀닷의 수명 및 안정성 한계</li>
+          <li>기업들은 상대적으로 상용화가 빠른 QD-OLED에 집중</li>
+        </ul>
+        <div class="badge-wrap">
+          <span class="badge">Samsung Display</span>
+          <span class="badge">연구기관 전반</span>
+          <span class="badge">QD-OLED 중심 전략</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="year">2023</div>
+        <h3>기초 연구의 과학적 가치 재조명</h3>
+        <p>퀀텀닷 발견과 합성 기술에 대한 공로가 노벨 화학상으로 이어지며, 퀀텀닷 연구의 학문적 중요성이 다시 크게 주목받았다.</p>
+        <ul>
+          <li>퀀텀닷의 발견과 합성 기술이 공식적으로 높은 평가를 받음</li>
+          <li>기초과학과 산업 응용의 연결 사례로 주목</li>
+        </ul>
+        <div class="badge-wrap">
+          <span class="badge">노벨 화학상</span>
+          <span class="badge">Alexei Ekimov</span>
+          <span class="badge">Louis Brus</span>
+          <span class="badge">Moungi Bawendi</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="year">2025~2026</div>
+        <h3>차세대 자발광 기술 재도전</h3>
+        <p>이전에는 기술적 난관으로 주춤했던 QNED, QDEL 같은 기술이 다시 주목받으며 차세대 디스플레이 후보로 재평가되고 있다.</p>
+        <ul>
+          <li>QNED 개발 재검토 및 연구 재개 움직임</li>
+          <li>QDEL과 프린팅 디스플레이 등 새로운 공정 기술 연구 확대</li>
+          <li>삼성 외에도 여러 소재 기업과 연구기관이 차세대 시장을 준비</li>
+        </ul>
+        <div class="badge-wrap">
+          <span class="badge">Samsung Display</span>
+          <span class="badge">Sharp</span>
+          <span class="badge">Nanosys</span>
+          <span class="badge">Merck</span>
+          <span class="badge">Fraunhofer</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">주요 기관별 역할</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>구분</th>
+          <th>기관</th>
+          <th>주요 역할</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>대학</td>
+          <td>MIT, Seoul National University, University of Manchester</td>
+          <td>기초 합성 연구, 광학 특성 연구, 차세대 디스플레이 구조 연구</td>
+        </tr>
+        <tr>
+          <td>연구소</td>
+          <td>Bell Labs, Fraunhofer</td>
+          <td>양자 구속 효과 발견, 응용 물성 및 공정 연구</td>
+        </tr>
+        <tr>
+          <td>기업</td>
+          <td>Samsung, Sony, Nanosys, Nanoco, Merck, LG</td>
+          <td>상용화, 소재 공급, 특허 확보, 디스플레이 제품화</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">디스플레이 외 응용 동향</h2>
+    <div class="summary-grid">
+      <div class="card">
+        <h3>의료·바이오</h3>
+        <p>
+          최근 퀀텀닷은 <strong>바이오 이미징, 암 진단, 바이오센서, 약물 전달 보조 기술</strong> 분야에서 지속적으로 연구되고 있다.
+          특히 강한 형광, 높은 광안정성, 그리고 입자 크기에 따른 발광 파장 조절 능력 때문에 기존 유기 형광 염료보다 장기 관찰이나 다중 표지 분석에 유리하다는 평가를 받는다.
+        </p>
+        <p>
+          응용 측면에서는 세포나 조직을 선명하게 표시하는 <strong>형광 프로브</strong>로 많이 연구되며, 특정 단백질이나 바이오마커를 검출하는 센서용 소재로도 주목받고 있다.
+          최근에는 <strong>근적외선(NIR) 기반 퀀텀닷</strong>을 이용해 더 깊은 조직까지 이미징하려는 시도와,
+          진단과 치료를 함께 수행하는 <strong>테라노스틱스(theranostics)</strong> 응용도 함께 언급된다.
+        </p>
+        <p>
+          아직은 대규모 상용 제품보다는 연구와 파일럿 응용 단계에 가깝지만,
+          퀀텀닷이 디스플레이를 넘어 의료 분석 소재로 확장되고 있다는 점에서 중요한 흐름으로 볼 수 있다.
+        </p>
+        <div class="badge-wrap">
+          <span class="badge">Bio Imaging</span>
+          <span class="badge">Cancer Diagnosis</span>
+          <span class="badge">Biosensor</span>
+          <span class="badge">Theranostics</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>태양전지·에너지</h3>
+        <p>
+          태양전지 분야에서는 퀀텀닷을 이용해 <strong>빛 흡수 영역을 넓히고 광전 변환 효율을 높이려는 연구</strong>가 활발하다.
+          퀀텀닷은 밴드갭을 크기에 따라 조절할 수 있기 때문에, 특정 파장대의 빛을 선택적으로 흡수하거나 기존 광전 소재와 결합하여 성능을 개선하는 데 유리하다.
+        </p>
+        <p>
+          최근에는 <strong>페로브스카이트-퀀텀닷 결합 구조</strong>, 광흡수층 보조 소재, 파장 변환층 등으로 활용하려는 방향이 자주 언급된다.
+          또한 이론적으로는 하나의 광자로 여러 전하를 생성하는 현상과 같은 차세대 고효율 메커니즘과도 연결되기 때문에 연구 가치가 높다.
+        </p>
+        <p>
+          산업 측면에서는 아직 디스플레이만큼 시장이 크지는 않지만,
+          일부 기업과 연구기관이 <strong>태양광 패널용 광변환 소재</strong>나 차세대 에너지 소재로 퀀텀닷을 검토하고 있어,
+          장기적으로는 에너지 산업으로의 확장 가능성을 보여주는 분야로 평가된다.
+        </p>
+        <div class="badge-wrap">
+          <span class="badge">Solar Cell</span>
+          <span class="badge">Light Harvesting</span>
+          <span class="badge">Perovskite Hybrid</span>
+          <span class="badge">Energy Materials</span>
+        </div>
+      </div>
+    </div>
+
+    <section class="card" style="margin-top: 8px;">
+      <h3 style="margin-top:0; color:#1d4ed8;">참고 링크</h3>
+      <ul>
+        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12457731/" target="_blank" rel="noopener noreferrer">바이오 이미징 관련 리뷰</a></li>
+        <li><a href="https://www.sciopen.com/article/10.26599/NR.2025.94907163" target="_blank" rel="noopener noreferrer">의료·진단 응용 관련 논문</a></li>
+        <li><a href="https://www.mdpi.com/journal/ijms/special_issues/Z93EGW809E" target="_blank" rel="noopener noreferrer">근적외선 기반 바이오 응용 자료</a></li>
+        <li><a href="https://thequantuminsider.com/2025/07/09/ubiqd-and-first-solar-establish-long-term-quantum-dot-supply-agreement/" target="_blank" rel="noopener noreferrer">태양전지 산업 협력 사례</a></li>
+      </ul>
+    </section>
+
+    <h2 class="section-title">전체 동향 한 줄 요약</h2>
+    <div class="card">
+      <p>
+        퀀텀닷 기술은 <strong>기초 과학 연구에서 출발해 디스플레이 산업으로 확장되었고</strong>,
+        최근에는 <strong>QD-OLED를 넘어 QNED·QDEL 같은 차세대 자발광 기술로 다시 진화하는 중</strong>이다.
+        즉, 삼성만의 흐름이 아니라 <strong>대학·연구소·소재 기업·패널 기업이 함께 만들어 온 기술 발전사</strong>로 보는 것이 맞다.
+      </p>
+    </div>
+
+        <section class="qd-sim" id="quantum-dot-simulation">
+      <h3>퀀텀닷 크기 변화 시뮬레이션</h3>
+      <p class="qd-sim-intro">
+        슬라이더를 조절하거나 아래 시뮬레이션 영역에서 마우스를 좌우로 움직이면 퀀텀닷의 크기, 밴드갭, 방출 파장, 색이 함께 변합니다.
+      </p>
+      <p class="qd-sim-note">
+        <strong>작은 퀀텀닷일수록 양자구속 효과가 강해져 더 높은 에너지의 빛을 방출한다.</strong>
+      </p>
+
+      <div class="qd-control-box">
+        <div class="qd-control-head">
+          <strong>Quantum Dot Size Control</strong>
+          <span class="qd-control-pill">현재 상태: <span id="qdStateText">중간 크기</span></span>
+        </div>
+        <input id="qdSlider" class="qd-slider" type="range" min="0" max="100" value="50" />
+        <div class="qd-scale">
+          <span>작음 · Blue · 큰 Band Gap</span>
+          <span>중간 · Green</span>
+          <span>큼 · Red · 작은 Band Gap</span>
+        </div>
+      </div>
+
+      <div class="qd-sim-layout">
+        <div class="qd-panel">
+          <div id="qdStage" class="qd-stage">
+            <div class="qd-stage-top">
+              <div>
+                <div class="qd-dot-area">
+                  <div>
+                    <div id="qdDot" class="qd-dot"></div>
+                    <div id="qdDotCaption" class="qd-dot-caption">중간 크기 퀀텀닷</div>
+                  </div>
+                </div>
+              </div>
+              <div class="energy-visual">
+                <div class="band-diagram">
+                  <div id="bandTop" class="band-line top"></div>
+                  <div class="band-line bottom"></div>
+                  <div id="bandGapBracket" class="band-gap-bracket"></div>
+                  <div id="bandGapLabel" class="band-gap-label">Eg</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="qd-wave"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qd-panel">
+          <div class="qd-readouts">
+            <div class="qd-readout">
+              <div class="qd-readout-label">Quantum Dot Size</div>
+              <div id="sizeReadout" class="qd-readout-value">6.0 nm</div>
+            </div>
+            <div class="qd-readout">
+              <div class="qd-readout-label">Band Gap (eV)</div>
+              <div id="bandGapReadout" class="qd-readout-value">2.25 eV</div>
+            </div>
+            <div class="qd-readout">
+              <div class="qd-readout-label">Emission Wavelength (nm)</div>
+              <div id="wavelengthReadout" class="qd-readout-value">551 nm</div>
+            </div>
+            <div class="qd-readout">
+              <div class="qd-readout-label">Emitted Color</div>
+              <div id="colorReadout" class="qd-readout-value">Green</div>
+            </div>
+          </div>
+
+          <div class="qd-color-box">
+            <div class="qd-readout-label">실시간 방출색 미리보기</div>
+            <div id="colorPreview" class="qd-color-preview"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      발표 자료용으로 사용할 경우, 이 페이지 아래에 <strong>“QD-LCD → QD-OLED → QNED → QDEL”</strong> 구조 비교 도식이나
+      <strong>“연도별 산업 변화 타임라인”</strong> 슬라이드를 추가하면 흐름 설명이 훨씬 쉬워진다.
+    </div>
+  </div>
+  <script>
+    const qdSlider = document.getElementById('qdSlider');
+    const qdStage = document.getElementById('qdStage');
+    const qdDot = document.getElementById('qdDot');
+    const qdDotCaption = document.getElementById('qdDotCaption');
+    const qdStateText = document.getElementById('qdStateText');
+    const sizeReadout = document.getElementById('sizeReadout');
+    const bandGapReadout = document.getElementById('bandGapReadout');
+    const wavelengthReadout = document.getElementById('wavelengthReadout');
+    const colorReadout = document.getElementById('colorReadout');
+    const colorPreview = document.getElementById('colorPreview');
+    const bandTop = document.getElementById('bandTop');
+    const bandGapBracket = document.getElementById('bandGapBracket');
+    const bandGapLabel = document.getElementById('bandGapLabel');
+
+    function lerp(min, max, t) {
+      return min + (max - min) * t;
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function emittedColorName(wavelength) {
+      if (wavelength < 500) return 'Blue';
+      if (wavelength < 590) return 'Green';
+      return 'Red';
+    }
+
+    function updateSimulation(rawValue) {
+      const value = clamp(rawValue, 0, 100);
+      qdSlider.value = value;
+
+      const t = value / 100;
+
+      const sizeNm = lerp(2.0, 10.0, t);
+      const bandGapEv = lerp(2.9, 1.8, t);
+      const wavelengthNm = 1240 / bandGapEv;
+      const dotPx = lerp(72, 156, t);
+
+      const hue = lerp(220, 0, t);
+      const glow = `hsl(${hue}, 85%, 58%)`;
+      const base = `hsl(${hue}, 78%, 46%)`;
+      const dark = `hsl(${hue}, 72%, 30%)`;
+      const colorName = emittedColorName(wavelengthNm);
+
+      qdDot.style.width = `${dotPx}px`;
+      qdDot.style.height = `${dotPx}px`;
+      qdDot.style.color = glow;
+      qdDot.style.background = `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.92), ${glow} 38%, ${base} 62%, ${dark} 100%)`;
+      qdDot.style.boxShadow = `inset -10px -12px 18px rgba(255,255,255,0.14), inset 12px 14px 20px rgba(0,0,0,0.2), 0 0 34px ${glow}`;
+
+      sizeReadout.textContent = `${sizeNm.toFixed(1)} nm`;
+      bandGapReadout.textContent = `${bandGapEv.toFixed(2)} eV`;
+      wavelengthReadout.textContent = `${Math.round(wavelengthNm)} nm`;
+      colorReadout.textContent = colorName;
+      colorPreview.style.background = `linear-gradient(90deg, rgba(255,255,255,0.08), ${glow})`;
+      bandGapLabel.textContent = `Eg = ${bandGapEv.toFixed(2)} eV`;
+
+      const topPercent = lerp(14, 34, t);
+      bandTop.style.top = `${topPercent}%`;
+      bandGapBracket.style.top = `${topPercent}%`;
+      bandGapBracket.style.height = `${62 - topPercent}%`;
+      bandGapLabel.style.top = `${topPercent + (62 - topPercent) / 2}%`;
+
+      if (value < 33) {
+        qdStateText.textContent = '작은 크기';
+        qdDotCaption.textContent = '작은 퀀텀닷 · 큰 Band Gap';
+      } else if (value < 66) {
+        qdStateText.textContent = '중간 크기';
+        qdDotCaption.textContent = '중간 크기 퀀텀닷';
+      } else {
+        qdStateText.textContent = '큰 크기';
+        qdDotCaption.textContent = '큰 퀀텀닷 · 작은 Band Gap';
+      }
+    }
+
+    qdSlider.addEventListener('input', (e) => {
+      updateSimulation(Number(e.target.value));
+    });
+
+    qdStage.addEventListener('mousemove', (e) => {
+      const rect = qdStage.getBoundingClientRect();
+      const ratio = clamp((e.clientX - rect.left) / rect.width, 0, 1);
+      updateSimulation(ratio * 100);
+    });
+
+    qdStage.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      const rect = qdStage.getBoundingClientRect();
+      const ratio = clamp((touch.clientX - rect.left) / rect.width, 0, 1);
+      updateSimulation(ratio * 100);
+    }, { passive: true });
+
+    updateSimulation(50);
+  </script>
+</body>
+</html>

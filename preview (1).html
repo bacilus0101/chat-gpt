@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[주제명] 발표용 인터랙티브 HTML</title>
+  <style>
+    :root{
+      --bg:#08111f;
+      --bg2:#0c1b33;
+      --panel:rgba(255,255,255,0.08);
+      --panel-strong:rgba(255,255,255,0.12);
+      --line:rgba(255,255,255,0.12);
+      --text:#edf5ff;
+      --muted:#aac0d8;
+      --blue:#6aa8ff;
+      --cyan:#5bd8ff;
+      --teal:#39d2c1;
+      --violet:#9b84ff;
+      --orange:#ffb65d;
+      --good:#4fd788;
+      --warn:#ff7a90;
+      --shadow:0 18px 40px rgba(0,0,0,0.25);
+      --radius-xl:28px;
+      --radius-lg:22px;
+      --radius-md:16px;
+      --max:1180px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:"Pretendard","Noto Sans KR","Apple SD Gothic Neo",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(91,216,255,0.12), transparent 26%),
+        radial-gradient(circle at 88% 14%, rgba(155,132,255,0.14), transparent 24%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+    .container{width:min(var(--max), calc(100% - 32px)); margin:0 auto}
+
+    .topbar{
+      position:sticky; top:0; z-index:100;
+      backdrop-filter:blur(14px);
+      background:rgba(8,17,31,0.78);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+    .topbar-inner{
+      min-height:70px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:18px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      font-weight:800; letter-spacing:-0.02em;
+      white-space:nowrap;
+    }
+    .brand-mark{
+      width:38px; height:38px; border-radius:14px;
+      background:linear-gradient(135deg, var(--blue), var(--teal));
+      position:relative;
+      box-shadow:0 10px 22px rgba(91,216,255,0.22);
+    }
+    .brand-mark::before{
+      content:"";
+      position:absolute; inset:9px;
+      border:2px solid rgba(255,255,255,0.9);
+      border-radius:10px;
+    }
+
+    .nav{
+      display:flex; gap:16px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .nav a{
+      color:var(--muted);
+      font-size:0.94rem;
+      font-weight:600;
+      position:relative;
+      padding:8px 0;
+    }
+    .nav a::after{
+      content:"";
+      position:absolute; left:0; bottom:0;
+      width:0; height:2px;
+      background:linear-gradient(90deg, var(--cyan), var(--violet));
+      transition:width .24s ease;
+    }
+    .nav a:hover::after,
+    .nav a.active::after{width:100%}
+
+    section{padding:92px 0}
+    h1,h2,h3,p{margin:0}
+    h1{
+      font-size:clamp(2.6rem, 5vw, 5rem);
+      line-height:1.03;
+      letter-spacing:-0.05em;
+    }
+    h2{
+      font-size:clamp(1.9rem, 3vw, 3rem);
+      line-height:1.12;
+      letter-spacing:-0.03em;
+      margin-bottom:14px;
+    }
+    h3{
+      font-size:1.14rem;
+      margin-bottom:10px;
+    }
+    .label{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(106,168,255,0.12);
+      color:var(--cyan);
+      border:1px solid rgba(255,255,255,0.08);
+      font-size:0.84rem;
+      font-weight:800;
+      letter-spacing:.03em;
+      margin-bottom:18px;
+    }
+    .lead{
+      color:var(--muted);
+      max-width:800px;
+      font-size:clamp(1rem, 1.4vw, 1.1rem);
+    }
+
+    .panel,.card,.media-card,.compare-box,.summary-card,.sim-panel{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      backdrop-filter:blur(12px);
+      box-shadow:var(--shadow);
+    }
+
+    .hero{
+      min-height:100svh;
+      display:flex;
+      align-items:center;
+      padding:28px 0 72px;
+    }
+    .hero-layout{
+      display:grid;
+      grid-template-columns:1.05fr 0.95fr;
+      gap:26px;
+      align-items:stretch;
+    }
+    .hero-copy{
+      padding:34px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-copy::before{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(135deg, rgba(91,216,255,0.05), rgba(155,132,255,0.05));
+      pointer-events:none;
+    }
+    .hero-copy > *{position:relative; z-index:1}
+    .subtitle{
+      color:var(--cyan);
+      font-weight:800;
+      letter-spacing:.03em;
+      margin-bottom:14px;
+    }
+    .hero-copy p{
+      margin-top:18px;
+      max-width:680px;
+      color:var(--muted);
+    }
+    .hero-actions{
+      display:flex; gap:14px; flex-wrap:wrap;
+      margin-top:28px;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:14px 20px;
+      border-radius:14px;
+      font-weight:800;
+      border:1px solid transparent;
+      transition:.22s ease;
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{
+      color:#06101c;
+      background:linear-gradient(135deg, var(--cyan), var(--teal));
+    }
+    .btn-secondary{
+      color:var(--text);
+      background:rgba(255,255,255,0.05);
+      border-color:rgba(255,255,255,0.12);
+    }
+
+    .hero-stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+      margin-top:28px;
+    }
+    .hero-stat{
+      padding:16px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .hero-stat strong{display:block; margin-bottom:6px}
+    .hero-stat span{color:var(--muted); font-size:0.92rem}
+
+    .hero-visual{
+      min-height:560px;
+      position:relative;
+      overflow:hidden;
+      border-radius:var(--radius-xl);
+      background:linear-gradient(155deg, rgba(8,22,44,0.98), rgba(16,39,77,0.96));
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow:0 32px 64px rgba(0,0,0,0.28);
+    }
+    .hero-visual::before{
+      content:"";
+      position:absolute; inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size:38px 38px;
+      mask-image:radial-gradient(circle at center, black 55%, transparent 100%);
+    }
+    .orb{
+      position:absolute; border-radius:50%; filter:blur(12px);
+      animation:float 7s ease-in-out infinite;
+    }
+    .orb.one{
+      width:220px; height:220px; top:-30px; right:-26px;
+      background:radial-gradient(circle, rgba(91,216,255,0.28), transparent 65%);
+    }
+    .orb.two{
+      width:180px; height:180px; left:-22px; bottom:30px;
+      background:radial-gradient(circle, rgba(155,132,255,0.24), transparent 65%);
+      animation-delay:-2.5s;
+    }
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+    .hero-sim{
+      position:absolute; inset:0; padding:28px;
+      display:grid; gap:18px; align-content:center;
+    }
+    .hero-flow{
+      display:grid;
+      grid-template-columns:1fr 80px 1fr 80px 1fr;
+      gap:10px;
+      align-items:center;
+    }
+    .flow-node{
+      min-height:86px;
+      display:grid; place-items:center;
+      text-align:center;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.10);
+      font-weight:700;
+    }
+    .flow-bar{
+      height:6px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.12);
+      position:relative;
+      overflow:hidden;
+    }
+    .flow-bar::before{
+      content:"";
+      position:absolute; inset:0;
+      width:40%;
+      border-radius:inherit;
+      background:linear-gradient(90deg, var(--cyan), var(--orange));
+      animation:dash 2.6s linear infinite;
+      box-shadow:0 0 16px rgba(91,216,255,0.5);
+    }
+    .flow-bar.alt::before{
+      background:linear-gradient(90deg, var(--violet), var(--cyan));
+      animation-delay:-1.2s;
+    }
+    @keyframes dash{0%{transform:translateX(-120%)}100%{transform:translateX(300%)}}
+
+    .hero-mini-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+    .hero-mini{
+      padding:16px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,0.10);
+    }
+    .hero-mini strong{display:block; margin-bottom:6px}
+    .hero-mini span{font-size:0.9rem; color:var(--muted)}
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:22px;
+      margin-bottom:28px;
+    }
+    .section-head p{max-width:760px}
+
+    .grid{display:grid; gap:20px}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-4{grid-template-columns:repeat(4,1fr)}
+
+    .card{
+      padding:24px;
+      transition:.24s ease;
+    }
+    .card:hover,.media-card:hover,.summary-card:hover,.compare-box:hover{
+      transform:translateY(-6px);
+      border-color:rgba(255,255,255,0.16);
+    }
+    .icon{
+      width:54px; height:54px;
+      border-radius:16px;
+      display:grid; place-items:center;
+      margin-bottom:14px;
+      color:white;
+      font-size:1.2rem;
+      font-weight:800;
+      background:linear-gradient(135deg, var(--blue), var(--cyan));
+      box-shadow:0 12px 24px rgba(91,216,255,0.18);
+    }
+    .card p,.media-card p,.compare-box p,.summary-card p{color:var(--muted)}
+
+    .definition-layout{
+      display:grid;
+      grid-template-columns:1.04fr 0.96fr;
+      gap:22px;
+    }
+    .definition-box{padding:28px}
+    .definition-pills{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      margin-top:18px;
+    }
+    .pill-card{
+      padding:18px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .pill-card strong{display:block; margin-bottom:6px}
+    .concept-box{
+      padding:26px;
+      min-height:340px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .orbit{
+      width:min(92%, 360px);
+      aspect-ratio:1;
+      position:relative;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,0.10);
+      display:grid;
+      place-items:center;
+    }
+    .orbit::before,.orbit::after{
+      content:"";
+      position:absolute;
+      inset:16%;
+      border-radius:50%;
+      border:1px dashed rgba(255,255,255,0.12);
+    }
+    .orbit::after{inset:32%}
+    .orbit-core{
+      width:112px; height:112px;
+      border-radius:26px;
+      display:grid; place-items:center;
+      text-align:center;
+      font-weight:800;
+      background:linear-gradient(135deg, rgba(91,216,255,0.20), rgba(155,132,255,0.18));
+      border:1px solid rgba(255,255,255,0.12);
+    }
+    .orbit-item{
+      position:absolute;
+      width:92px; height:92px;
+      border-radius:22px;
+      display:grid; place-items:center;
+      text-align:center;
+      padding:8px;
+      font-weight:700;
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,0.10);
+      animation:bob 4.4s ease-in-out infinite;
+    }
+    .orbit-item.one{top:-10px; left:50%; transform:translateX(-50%)}
+    .orbit-item.two{right:-10px; top:50%; transform:translateY(-50%); animation-delay:-1s}
+    .orbit-item.three{bottom:-10px; left:50%; transform:translateX(-50%); animation-delay:-2s}
+    .orbit-item.four{left:-10px; top:50%; transform:translateY(-50%); animation-delay:-3s}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+    .timeline{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:18px;
+      position:relative;
+    }
+    .timeline::before{
+      content:"";
+      position:absolute;
+      left:8%; right:8%; top:36px;
+      height:3px;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(91,216,255,0.22), rgba(155,132,255,0.24));
+    }
+    .timeline-card{position:relative; z-index:1; padding-top:26px}
+    .dot{
+      width:18px; height:18px; border-radius:50%;
+      background:linear-gradient(135deg, var(--cyan), var(--violet));
+      box-shadow:0 0 0 8px rgba(91,216,255,0.12);
+      margin-bottom:18px;
+    }
+
+    .visual-layout{
+      display:grid;
+      grid-template-columns:0.94fr 1.06fr;
+      gap:22px;
+    }
+    .controls{display:grid; gap:14px}
+    .control-card{padding:22px}
+    .tab-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .tab-btn{
+      border:1px solid rgba(255,255,255,0.10);
+      background:rgba(255,255,255,0.04);
+      color:var(--muted);
+      border-radius:12px;
+      padding:10px 14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .tab-btn.active{
+      background:rgba(91,216,255,0.14);
+      color:#fff;
+      border-color:rgba(91,216,255,0.24);
+    }
+    .readout{
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:10px;
+      font-weight:700;
+    }
+    input[type="range"]{
+      width:100%;
+      accent-color:var(--cyan);
+      cursor:pointer;
+    }
+
+    .sim-panel{
+      min-height:470px;
+      padding:24px;
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(160deg, rgba(9,24,48,0.94), rgba(15,38,77,0.92));
+    }
+    .sim-stage{
+      position:relative;
+      min-height:420px;
+      border-radius:20px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.08);
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    }
+    .sim-stage::before{
+      content:"";
+      position:absolute; inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size:40px 40px;
+    }
+    .core{
+      position:absolute;
+      left:50%; top:50%;
+      transform:translate(-50%, -50%);
+      width:130px; height:130px;
+      border-radius:28px;
+      display:grid; place-items:center;
+      text-align:center;
+      font-weight:800;
+      background:linear-gradient(135deg, rgba(91,216,255,0.18), rgba(155,132,255,0.22));
+      border:1px solid rgba(255,255,255,0.14);
+      box-shadow:0 0 40px rgba(91,216,255,0.16);
+      transition:.25s ease;
+      z-index:2;
+    }
+    .ring{
+      position:absolute;
+      left:50%; top:50%;
+      transform:translate(-50%, -50%);
+      border-radius:50%;
+      border:1px solid rgba(91,216,255,0.16);
+      animation:pulseRing 3s ease-in-out infinite;
+    }
+    .ring.r1{width:220px;height:220px}
+    .ring.r2{width:320px;height:320px;animation-delay:-1s}
+    .ring.r3{width:420px;height:420px;animation-delay:-2s}
+    @keyframes pulseRing{
+      0%,100%{opacity:.24;transform:translate(-50%,-50%) scale(1)}
+      50%{opacity:.7;transform:translate(-50%,-50%) scale(1.04)}
+    }
+    .particle{
+      position:absolute;
+      left:50%; top:50%;
+      width:12px; height:12px;
+      border-radius:50%;
+      background:radial-gradient(circle, #fff, var(--cyan));
+      box-shadow:0 0 14px rgba(91,216,255,0.6);
+      animation:orbit 6s linear infinite;
+    }
+    .particle.p1{animation-duration:7.5s}
+    .particle.p2{animation-duration:5.8s;animation-delay:-1s}
+    .particle.p3{animation-duration:6.6s;animation-delay:-2s}
+    .particle.p4{animation-duration:8.2s;animation-delay:-3s}
+    @keyframes orbit{from{transform:rotate(0deg) translateX(160px)}to{transform:rotate(360deg) translateX(160px)}}
+
+    .sim-metrics{
+      position:absolute;
+      left:18px; right:18px; bottom:18px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      z-index:3;
+    }
+    .metric{
+      padding:14px;
+      border-radius:14px;
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,0.10);
+    }
+    .metric span{
+      display:block;
+      font-size:0.84rem;
+      color:rgba(255,255,255,0.68);
+      margin-bottom:4px;
+    }
+
+    .variable-layout{
+      display:grid;
+      grid-template-columns:0.96fr 1.04fr;
+      gap:22px;
+    }
+    .var-panel{padding:24px}
+    .var-grid{display:grid; gap:14px; margin-top:18px}
+    .var-card{
+      padding:16px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+      transition:.2s ease;
+      cursor:pointer;
+    }
+    .var-card.active{
+      background:rgba(91,216,255,0.10);
+      border-color:rgba(91,216,255,0.22);
+    }
+    .var-card strong{display:block; margin-bottom:6px}
+    .bars{display:grid; gap:14px; margin-top:10px}
+    .bar-row{
+      display:grid;
+      grid-template-columns:120px 1fr 60px;
+      gap:10px;
+      align-items:center;
+    }
+    .bar-track{
+      height:12px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.06);
+      overflow:hidden;
+    }
+    .bar-fill{
+      height:100%;
+      width:50%;
+      border-radius:inherit;
+      background:linear-gradient(90deg, var(--cyan), var(--violet));
+      transition:width .24s ease;
+    }
+    .bar-label,.bar-value{color:var(--muted); font-size:0.92rem}
+
+    .features-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+    .feature-key{
+      color:var(--cyan);
+      font-size:0.86rem;
+      font-weight:800;
+      margin-bottom:6px;
+    }
+
+    .gallery-layout{
+      display:grid;
+      grid-template-columns:1.04fr 0.96fr;
+      gap:22px;
+    }
+    .gallery-main{display:grid; gap:18px}
+    .media-card{
+      overflow:hidden;
+      transition:.24s ease;
+    }
+    .media-frame,.gallery-frame{
+      position:relative;
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(91,216,255,0.12), transparent 28%),
+        linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    }
+    .media-frame{height:250px}
+    .gallery-frame.tall{height:320px}
+    .gallery-frame.small{height:165px}
+    .media-frame::before,.gallery-frame::before{
+      content:"IMAGE";
+      position:absolute; inset:0;
+      display:grid; place-items:center;
+      color:rgba(255,255,255,0.24);
+      font-weight:800;
+      letter-spacing:.18em;
+    }
+    .media-frame::after,.gallery-frame::after{
+      content:"";
+      position:absolute; inset:16px;
+      border-radius:16px;
+      border:1px dashed rgba(255,255,255,0.12);
+    }
+    .media-content,.gallery-content{padding:18px 20px 20px}
+    .gallery-side{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+    }
+
+    .application-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:18px;
+    }
+    .application-card{min-height:220px}
+
+    .compare-layout{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:22px;
+    }
+    .compare-box{
+      padding:26px;
+      min-height:320px;
+    }
+    .compare-box.positive{
+      background:linear-gradient(160deg, rgba(18,78,56,0.34), rgba(9,36,27,0.46));
+    }
+    .compare-box.limited{
+      background:linear-gradient(160deg, rgba(94,35,52,0.34), rgba(36,12,20,0.46));
+    }
+    .check-list{
+      display:grid;
+      gap:12px;
+      margin-top:18px;
+    }
+    .check-item{
+      display:grid;
+      grid-template-columns:28px 1fr;
+      gap:10px;
+      align-items:start;
+    }
+    .mark{
+      width:28px; height:28px;
+      border-radius:50%;
+      display:grid; place-items:center;
+      color:white;
+      font-weight:800;
+      font-size:.9rem;
+      margin-top:1px;
+    }
+    .mark.good{background:linear-gradient(135deg, var(--good), var(--teal))}
+    .mark.warn{background:linear-gradient(135deg, var(--warn), var(--orange))}
+
+    .summary-section{text-align:center}
+    .summary-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px;
+      margin-top:26px;
+      text-align:left;
+    }
+    .summary-card{padding:22px}
+    .summary-card strong{display:block; margin-bottom:8px}
+    .closing{
+      margin-top:24px;
+      color:var(--muted);
+      font-size:1.02rem;
+    }
+
+    footer{
+      padding:30px 0 54px;
+      text-align:center;
+      color:var(--muted);
+      border-top:1px solid rgba(255,255,255,0.06);
+      font-size:0.94rem;
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(30px);
+      transition:opacity .78s ease, transform .78s ease;
+    }
+    .reveal.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    @media (max-width: 1100px){
+      .hero-layout,.definition-layout,.visual-layout,.variable-layout,.gallery-layout,.compare-layout{grid-template-columns:1fr}
+      .grid-4,.timeline,.features-grid,.summary-grid,.hero-stats,.hero-mini-grid,.application-grid{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media (max-width: 760px){
+      section{padding:74px 0}
+      .nav{display:none}
+      .grid-2,.grid-3,.grid-4,.timeline,.features-grid,.summary-grid,.hero-stats,.hero-mini-grid,.application-grid,.gallery-side,.compare-layout{grid-template-columns:1fr}
+      .hero-flow,.sim-metrics,.bar-row{grid-template-columns:1fr}
+      .flow-bar,.bar-track{height:28px}
+      .timeline::before{display:none}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span>[주제명] Presentation</span>
+      </div>
+      <nav class="nav" id="navLinks">
+        <a href="#hero">시작</a>
+        <a href="#definition">정의</a>
+        <a href="#principle">원리</a>
+        <a href="#visual">시각화</a>
+        <a href="#variables">변수</a>
+        <a href="#features">특징</a>
+        <a href="#gallery">자료</a>
+        <a href="#applications">응용</a>
+        <a href="#compare">비교</a>
+        <a href="#summary">요약</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. Hero -->
+    <section class="hero" id="hero">
+      <div class="container hero-layout">
+        <div class="panel hero-copy reveal show">
+          <div class="subtitle">대학생 발표 / 수업 자료 / 전공 개념 설명용</div>
+          <h1>[주제명]</h1>
+          <p>
+            [주제명]은 <strong>[한 줄 핵심 설명]</strong>으로 요약할 수 있다.
+            이 페이지는 <strong>[개념1]</strong>, <strong>[개념2]</strong>, <strong>[개념3]</strong>를 발표 흐름에 맞게 시각적으로 설명하는 발표용 HTML이다.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#definition">발표 시작</a>
+            <a class="btn btn-secondary" href="#visual">핵심 시각화 보기</a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <strong>핵심 개념</strong>
+              <span>[개념1], [개념2], [개념3]</span>
+            </div>
+            <div class="hero-stat">
+              <strong>핵심 도식</strong>
+              <span>[구조도], [원리도], [비교도]</span>
+            </div>
+            <div class="hero-stat">
+              <strong>발표 분량</strong>
+              <span>[5분용 / 10분용 / 자세한 설명형]</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal show" aria-hidden="true">
+          <div class="orb one"></div>
+          <div class="orb two"></div>
+          <div class="hero-sim">
+            <div class="hero-flow">
+              <div class="flow-node">입력 조건</div>
+              <div class="flow-bar"></div>
+              <div class="flow-node">핵심 원리</div>
+              <div class="flow-bar alt"></div>
+              <div class="flow-node">결과 / 응용</div>
+            </div>
+            <div class="hero-mini-grid">
+              <div class="hero-mini">
+                <strong>Definition</strong>
+                <span>주제를 빠르게 정의하는 구간</span>
+              </div>
+              <div class="hero-mini">
+                <strong>Principle</strong>
+                <span>원리를 흐름 중심으로 설명하는 구간</span>
+              </div>
+              <div class="hero-mini">
+                <strong>Simulation</strong>
+                <span>변화와 결과를 보여주는 구간</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 정의 -->
+    <section id="definition">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="label">1. 주제 개요 / 정의</div>
+            <h2>[주제명]이란 무엇인가</h2>
+          </div>
+          <p class="lead">
+            [주제명]은 [정의 문장 1]로 설명할 수 있고, 동시에 [정의 문장 2]로도 이해할 수 있다.
+            발표에서는 이 두 관점을 연결해 전체 구조를 이해하는 것이 핵심이다.
+          </p>
+        </div>
+
+        <div class="definition-layout">
+          <div class="panel definition-box reveal">
+            <h3>핵심 정의</h3>
+            <p class="lead" style="max-width:none;">
+              [주제명]은 <strong>[정의 1]</strong>이며, 실제로는 <strong>[정의 2]</strong>와 연결되어 작동한다.
+              따라서 단순한 개념 암기보다 구조와 메커니즘의 연결로 이해하는 것이 중요하다.
+            </p>
+            <div class="definition-pills">
+              <div class="pill-card">
+                <strong>핵심 정의 A</strong>
+                <p>[핵심 정의 A를 짧게]</p>
+              </div>
+              <div class="pill-card">
+                <strong>핵심 정의 B</strong>
+                <p>[핵심 정의 B를 짧게]</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel concept-box reveal">
+            <div class="orbit">
+              <div class="orbit-core">[주제명]</div>
+              <div class="orbit-item one">[개념1]</div>
+              <div class="orbit-item two">[개념2]</div>
+              <div class="orbit-item three">[개념3]</div>
+              <div class="orbit-item four">[핵심 조건]</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 원리 -->
+    <section id="principle">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="label">2. 기본 원리 / 핵심 개념</div>
+            <h2>핵심 원리는 어떻게 진행되는가</h2>
+          </div>
+          <p class="lead">
+            아래 단계형 구조는 [주제명]의 핵심 메커니즘을 발표 흐름에 맞춰 정리한 것이다.
+            각 단계는 카드 하나로 설명할 수 있도록 밀도를 조절했다.
+          </p>
+        </div>
+
+        <div class="timeline">
+          <article class="card timeline-card reveal">
+            <div class="dot"></div>
+            <div class="icon">1</div>
+            <h3>입력 / 조건 설정</h3>
+            <p>[초기 조건], [환경 조건], [구조 조건]이 어떻게 출발점을 만드는지 설명한다.</p>
+          </article>
+          <article class="card timeline-card reveal">
+            <div class="dot"></div>
+            <div class="icon" style="background:linear-gradient(135deg,var(--cyan),var(--teal));">2</div>
+            <h3>핵심 상호작용</h3>
+            <p>[개념1]과 [개념2]가 어떻게 연결되며 현상을 유도하는지 정리한다.</p>
+          </article>
+          <article class="card timeline-card reveal">
+            <div class="dot"></div>
+            <div class="icon" style="background:linear-gradient(135deg,var(--violet),var(--blue));">3</div>
+            <h3>변수 변화</h3>
+            <p>[변수 A], [변수 B]의 변화에 따라 중간 과정이 어떻게 바뀌는지 보여준다.</p>
+          </article>
+          <article class="card timeline-card reveal">
+            <div class="dot"></div>
+            <div class="icon" style="background:linear-gradient(135deg,var(--orange),var(--warn));">4</div>
+            <h3>결과 / 출력</h3>
+            <p>최종적으로 [결과], [특징], [응용 가능성]으로 이어지는 구조를 정리한다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 핵심 시각화 -->
+    <section id="visual">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="label">3. 핵심 시각화 섹션</div>
+            <h2>가장 중요한 개념을 인터랙티브하게 보기</h2>
+          </div>
+          <p class="lead">
+            슬라이더와 탭을 조절하면 [주제명]의 핵심 상태가 어떻게 바뀌는지 시뮬레이션 느낌으로 볼 수 있다.
+          </p>
+        </div>
+
+        <div class="visual-layout">
+          <div class="controls">
+            <div class="card control-card reveal">
+              <h3>[변수 이름] 조절</h3>
+              <p>[변수 이름]이 변할수록 [결과 요소]가 어떻게 달라지는지 실시간으로 확인한다.</p>
+              <div style="margin-top:16px;">
+                <div class="readout">
+                  <span>[변수 이름]</span>
+                  <strong id="mainValue">50</strong>
+                </div>
+                <input id="mainSlider" type="range" min="0" max="100" value="50" />
+              </div>
+            </div>
+
+            <div class="card control-card reveal">
+              <h3>보기 모드</h3>
+              <p>[구조], [원리], [비교] 중 무엇을 강조할지 선택한다.</p>
+              <div class="tab-row" id="modeTabs">
+                <button class="tab-btn active" data-mode="structure">구조</button>
+                <button class="tab-btn" data-mode="principle">원리</button>
+                <button class="tab-btn" data-mode="compare">비교</button>
+              </div>
+            </div>
+
+            <div class="card control-card reveal">
+              <h3>설명 포인트</h3>
+              <p id="modeText">현재는 <strong>구조 모드</strong>다. [주제명]을 구성하는 블록과 연결 관계를 강조한다.</p>
+            </div>
+          </div>
+
+          <div class="sim-panel reveal">
+            <div class="sim-stage">
+              <div class="ring r1"></div>
+              <div class="ring r2"></div>
+              <div class="ring r3"></div>
+              <div class="core" id="simCore">[주제명]<br />Core</div>
+              <div class="particle p1"></div>
+              <div class="particle p2"></div>
+              <div class="particle p3"></div>
+              <div class="particle p4"></div>
+              <div class="sim-metrics">
+                <div class="metric">
+                  <span>Output A</span>
+                  <strong id="metricA">50%</strong>
+                </div>
+                <div class="metric">
+                  <span>Output B</span>
+                  <strong id="metricB">중간</strong>
+                </div>
+                <div class="metric">
+                  <span>Output C</span>
+                  <strong id="metricC">안정</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 변수 -->
+    <section id="variables">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="label">4. 중요한 변수 / 조건 / 비교 요소</div>
+            <h2>어떤 조건이 결과를 크게 바꾸는가</h2>
+          </div>
+          <p class="lead">
+            아래 카드를 선택하면 오른쪽 설명과 정량형 막대가 함께 바뀐다. 발표에서는 이 구조를 이용해 변수의 중요도를 설명할 수 있다.
+          </p>
+        </div>
+
+        <div class="variable-layout">
+          <div class="panel var-panel reveal">
+            <h3>주요 변수 선택</h3>
+            <div class="var-grid" id="varCards">
+              <div class="var-card active" data-key="v1">
+                <strong>[변수 A]</strong>
+                <p>결과의 크기나 세기를 바꾸는 핵심 조건</p>
+              </div>
+              <div class="var-card" data-key="v2">
+                <strong>[변수 B]</strong>
+                <p>반응 속도나 전이 시점을 좌우하는 조건</p>
+              </div>
+              <div class="var-card" data-key="v3">
+                <strong>[변수 C]</strong>
+                <p>안정성, 균일성, 재현성을 바꾸는 조건</p>
+              </div>
+              <div class="var-card" data-key="v4">
+                <strong>[변수 D]</strong>
+                <p>응용 특성이나 출력 형태를 바꾸는 조건</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel var-panel reveal">
+            <h3 id="varTitle">[변수 A]가 중요한 이유</h3>
+            <p id="varText">[변수 A]는 [주제명]에서 가장 기본적인 변화량을 결정하며 [개념1]과 직접 연결되어 결과 크기를 좌우한다.</p>
+            <div class="bars">
+              <div class="bar-row">
+                <div class="bar-label">민감도</div>
+                <div class="bar-track"><div class="bar-fill" id="bar1"></div></div>
+                <div class="bar-value" id="val1">82%</div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label">안정성</div>
+                <div class="bar-track"><div class="bar-fill" id="bar2"></div></div>
+                <div class="bar-value" id="val2">58%</div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-label">응용성</div>
+                <div class="bar-track"><div class="bar-fill" id="bar3"></div></div>
+                <div class="bar-value" id="val3">71%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. 특징 -->
+    <section id="features">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="label">5. 결과 / 특징 / 핵심 성질</div>
+            <h2>핵심 포인트를 카드로 정리</h2>
+          </div>
+          <p class="lead">
+            발표에서 꼭 강조해야 할 결과와 성질을 키워드 중심 카드로 정리했다. 각 카드는 한 개의 설명 포인트로 바로 사용하기 좋다.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <article class="card reveal">
+            <div class="feature-key">KEY 01</div>
+            <h3>[핵심 특징 1]</h3>
+            <p>[핵심 특징 1 설명]</p>
+          </article>
+          <article class="card reveal">
+            <div class="feature-key">KEY 02</div>
+            <h3>[핵심 특징 2]</h3>
+            <p>[핵심 특징 2 설명]</p>
+          </article>
+          <article class="card reveal">
+            <div class="feature-key">KEY 03</div>
+            <h3>[핵심 특징 3]</h3>
+            <p>[핵심 특징 3 설명]</p>
+          </article>
+          <article class="card reveal">
+            <div class="feature-key">KEY 04</div>
+            <h3>[핵심 특징 4]</h3>
+            <p>[핵심 특징 4 설명]</p>
+          </article>
+          <article class="card reveal">
+            <div class="feature-key">KEY 05</div>
+            <h3>[핵심 특징 5]</h3>
+            <p>[핵심 특징 5 설명]</p>
+          </article>
+          <article class="card reveal">
+            <div class="feature-key">KEY 06</div>
+            <h3>[핵심 특징 6]</h3>
+            <p>[핵심 특징 6 설명]</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 이미지 -->
+    <section id="gallery">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="label">6. 이미지 / 사진 자료 섹션</div>
+            <h2>사진 자료가 많은 느낌의 발표 레이아웃</h2>
+          </div>
+          <p class="lead">
+            실제 외부 이미지가 없어도 완성도가 떨어져 보이지 않도록 플레이스홀더 이미지와 캡션이 포함된 갤러리 구조로 만들었다.
+          </p>
+        </div>
+
+        <div class="gallery-layout">
+          <div class="gallery-main">
+            <article class="media-card reveal">
+              <div class="media-frame"></div>
+              <div class="media-content">
+                <h3>[장비 사진 / 대표 구조 이미지]</h3>
+                <p>캡션: [주제명]과 관련된 대표 장비 또는 전체 구조 이미지를 넣는 자리</p>
+              </div>
+            </article>
+            <article class="media-card reveal">
+              <div class="media-frame"></div>
+              <div class="media-content">
+                <h3>[확대 이미지 / 미시 구조 이미지]</h3>
+                <p>캡션: 세부 구조, 표면 형태, 현미경 이미지, 결과 그래프 등을 넣는 자리</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="gallery-side">
+            <article class="media-card reveal">
+              <div class="gallery-frame tall"></div>
+              <div class="gallery-content">
+                <h3>[원리도]</h3>
+                <p>핵심 원리를 설명하는 도식 자리</p>
+              </div>
+            </article>
+            <article class="media-card reveal">
+              <div class="gallery-frame small"></div>
+              <div class="gallery-content">
+                <h3>[비교 이미지]</h3>
+                <p>조건 전후 비교 자료</p>
+              </div>
+            </article>
+            <article class="media-card reveal">
+              <div class="gallery-frame small"></div>
+              <div class="gallery-content">
+                <h3>[응용 예시]</h3>
+                <p>응용 사례 예시 자료</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. 응용 -->
+    <section id="applications">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="label">7. 응용 분야 / 활용 사례</div>
+            <h2>실제로 쓰이는 분야는 어디인가</h2>
+          </div>
+          <p class="lead">
+            응용 분야는 발표 후반부에서 청중의 관심을 끌기 좋은 구간이다. 대표 사례를 카드로 정리해 바로 설명할 수 있게 했다.
+          </p>
+        </div>
+
+        <div class="application-grid">
+          <article class="card application-card reveal"><div class="icon">A1</div><h3>[응용 분야 1]</h3><p>[응용 분야 1 설명]</p></article>
+          <article class="card application-card reveal"><div class="icon" style="background:linear-gradient(135deg,var(--teal),var(--cyan));">A2</div><h3>[응용 분야 2]</h3><p>[응용 분야 2 설명]</p></article>
+          <article class="card application-card reveal"><div class="icon" style="background:linear-gradient(135deg,var(--violet),var(--blue));">A3</div><h3>[응용 분야 3]</h3><p>[응용 분야 3 설명]</p></article>
+          <article class="card application-card reveal"><div class="icon" style="background:linear-gradient(135deg,var(--orange),var(--warn));">A4</div><h3>[응용 분야 4]</h3><p>[응용 분야 4 설명]</p></article>
+          <article class="card application-card reveal"><div class="icon">A5</div><h3>[응용 분야 5]</h3><p>[응용 분야 5 설명]</p></article>
+          <article class="card application-card reveal"><div class="icon" style="background:linear-gradient(135deg,var(--cyan),var(--orange));">A6</div><h3>[응용 분야 6]</h3><p>[응용 분야 6 설명]</p></article>
+          <article class="card application-card reveal"><div class="icon" style="background:linear-gradient(135deg,var(--good),var(--teal));">A7</div><h3>[응용 분야 7]</h3><p>[응용 분야 7 설명]</p></article>
+          <article class="card application-card reveal"><div class="icon" style="background:linear-gradient(135deg,var(--blue),var(--violet));">A8</div><h3>[응용 분야 8]</h3><p>[응용 분야 8 설명]</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. 비교 -->
+    <section id="compare">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="label">8. 장점과 한계 / 비교 분석</div>
+            <h2>무엇이 강점이고, 무엇이 한계인가</h2>
+          </div>
+          <p class="lead">
+            장점과 한계를 균형 있게 제시하면 발표가 훨씬 설득력 있게 보인다. 아래 구조는 비교 발표에 바로 쓰기 좋다.
+          </p>
+        </div>
+
+        <div class="compare-layout">
+          <div class="compare-box positive reveal">
+            <h3>장점 / 강점</h3>
+            <div class="check-list">
+              <div class="check-item"><div class="mark good">✓</div><div><strong>[장점 1]</strong><p>[장점 1 설명]</p></div></div>
+              <div class="check-item"><div class="mark good">✓</div><div><strong>[장점 2]</strong><p>[장점 2 설명]</p></div></div>
+              <div class="check-item"><div class="mark good">✓</div><div><strong>[장점 3]</strong><p>[장점 3 설명]</p></div></div>
+              <div class="check-item"><div class="mark good">✓</div><div><strong>[장점 4]</strong><p>[장점 4 설명]</p></div></div>
+            </div>
+          </div>
+
+          <div class="compare-box limited reveal">
+            <h3>한계 / 고려사항</h3>
+            <div class="check-list">
+              <div class="check-item"><div class="mark warn">!</div><div><strong>[한계 1]</strong><p>[한계 1 설명]</p></div></div>
+              <div class="check-item"><div class="mark warn">!</div><div><strong>[한계 2]</strong><p>[한계 2 설명]</p></div></div>
+              <div class="check-item"><div class="mark warn">!</div><div><strong>[한계 3]</strong><p>[한계 3 설명]</p></div></div>
+              <div class="check-item"><div class="mark warn">!</div><div><strong>[한계 4]</strong><p>[한계 4 설명]</p></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. 요약 -->
+    <section id="summary">
+      <div class="container summary-section">
+        <div class="reveal">
+          <div class="label">9. 마지막 요약</div>
+          <h2>[주제명] 핵심 요약</h2>
+          <p class="lead" style="margin:0 auto;">
+            발표 마무리에서는 정의, 핵심 원리, 응용 의미를 짧고 강하게 다시 정리한다.
+          </p>
+        </div>
+
+        <div class="summary-grid reveal">
+          <article class="summary-card"><strong>요약 01</strong><p>[주제명]은 [핵심 정의]로 이해할 수 있다.</p></article>
+          <article class="summary-card"><strong>요약 02</strong><p>[개념1]과 [개념2]의 연결이 전체 원리를 결정한다.</p></article>
+          <article class="summary-card"><strong>요약 03</strong><p>[변수 변화]에 따라 결과와 응용 특성이 달라진다.</p></article>
+          <article class="summary-card"><strong>요약 04</strong><p>결국 [응용 분야]에서 중요한 의미를 가진다.</p></article>
+        </div>
+
+        <p class="closing reveal">
+          발표 마무리 문장:
+          <strong>“[주제명]은 단순한 개념이 아니라, 구조·원리·변수·응용이 유기적으로 연결된 시스템으로 이해해야 한다.”</strong>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Interactive Presentation Template for [주제명] · HTML / CSS / JavaScript Single File
+  </footer>
+
+  <script>
+    // 스크롤 등장 효과
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('show');
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll('.reveal').forEach((el, idx) => {
+      if (!el.classList.contains('show')) {
+        el.style.transitionDelay = `${Math.min(idx * 35, 220)}ms`;
+      }
+      revealObserver.observe(el);
+    });
+
+    // 네비게이션 활성화
+    const navLinks = [...document.querySelectorAll('#navLinks a')];
+    const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = `#${entry.target.id}`;
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === id);
+          });
+        }
+      });
+    }, { threshold: 0.45 });
+
+    sections.forEach(sec => navObserver.observe(sec));
+
+    // 핵심 시각화 인터랙션
+    const slider = document.getElementById('mainSlider');
+    const mainValue = document.getElementById('mainValue');
+    const simCore = document.getElementById('simCore');
+    const metricA = document.getElementById('metricA');
+    const metricB = document.getElementById('metricB');
+    const metricC = document.getElementById('metricC');
+    const particles = document.querySelectorAll('.particle');
+    const tabs = document.querySelectorAll('.tab-btn');
+    const modeText = document.getElementById('modeText');
+    let currentMode = 'structure';
+
+    function updateSim() {
+      const value = Number(slider.value);
+      mainValue.textContent = value;
+
+      const size = 110 + value * 0.72;
+      const radius = 120 + value * 0.8;
+
+      simCore.style.width = `${size}px`;
+      simCore.style.height = `${size}px`;
+      simCore.style.borderRadius = `${20 + value * 0.12}px`;
+      simCore.style.filter = `hue-rotate(${Math.round(value * 1.1)}deg)`;
+      simCore.style.boxShadow = `0 0 ${18 + value * 0.35}px rgba(91,216,255,${0.14 + value / 600})`;
+
+      particles.forEach((p, i) => {
+        p.style.animationDuration = `${Math.max(3.8, 8 - value / 24 + i * 0.35)}s`;
+        p.style.transform = `rotate(${i * 60}deg) translateX(${radius}px)`;
+      });
+
+      metricA.textContent = `${value}%`;
+      metricB.textContent = value < 34 ? '낮음' : value < 67 ? '중간' : '높음';
+      metricC.textContent = currentMode === 'structure'
+        ? (value < 50 ? '구조 중심' : '연결 강화')
+        : currentMode === 'principle'
+        ? (value < 50 ? '초기 반응' : '전이 활성')
+        : (value < 50 ? '기준 상태' : '차이 확대');
+    }
+
+    slider.addEventListener('input', updateSim);
+    updateSim();
+
+    const modeMap = {
+      structure: '현재는 <strong>구조 모드</strong>다. [주제명]을 구성하는 블록과 연결 관계를 강조한다.',
+      principle: '현재는 <strong>원리 모드</strong>다. 시간 흐름과 인과 관계를 따라 핵심 메커니즘을 강조한다.',
+      compare: '현재는 <strong>비교 모드</strong>다. 조건 변화 전후 또는 서로 다른 상태의 차이를 강조한다.'
+    };
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentMode = tab.dataset.mode;
+        modeText.innerHTML = modeMap[currentMode];
+        simCore.innerHTML =
+          currentMode === 'structure' ? '[주제명]<br />Core' :
+          currentMode === 'principle' ? 'Mechanism<br />Flow' :
+          'Compare<br />View';
+        updateSim();
+      });
+    });
+
+    // 변수 카드 인터랙션
+    const varCards = document.querySelectorAll('.var-card');
+    const varTitle = document.getElementById('varTitle');
+    const varText = document.getElementById('varText');
+    const bar1 = document.getElementById('bar1');
+    const bar2 = document.getElementById('bar2');
+    const bar3 = document.getElementById('bar3');
+    const val1 = document.getElementById('val1');
+    const val2 = document.getElementById('val2');
+    const val3 = document.getElementById('val3');
+
+    const varData = {
+      v1: {
+        title: '[변수 A]가 중요한 이유',
+        text: '[변수 A]는 [주제명]에서 가장 기본적인 변화량을 결정하며 [개념1]과 직접 연결되어 결과 크기를 좌우한다.',
+        bars: [82, 58, 71]
+      },
+      v2: {
+        title: '[변수 B]가 중요한 이유',
+        text: '[변수 B]는 전이 시점이나 반응 속도를 바꾸는 조건이며 [개념2] 해석에서 중요하다.',
+        bars: [74, 66, 63]
+      },
+      v3: {
+        title: '[변수 C]가 중요한 이유',
+        text: '[변수 C]는 안정성, 균일성, 재현성을 바꾸는 변수로 실험 또는 응용 해석에 중요하다.',
+        bars: [61, 84, 68]
+      },
+      v4: {
+        title: '[변수 D]가 중요한 이유',
+        text: '[변수 D]는 최종 출력 형태와 응용 방향을 결정하는 조건으로 비교 발표에 적합하다.',
+        bars: [69, 52, 88]
+      }
+    };
+
+    function updateBars(vals) {
+      [bar1, bar2, bar3].forEach((bar, idx) => {
+        bar.style.width = `${vals[idx]}%`;
+      });
+      [val1, val2, val3].forEach((label, idx) => {
+        label.textContent = `${vals[idx]}%`;
+      });
+    }
+
+    varCards.forEach(card => {
+      card.addEventListener('click', () => {
+        varCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        const data = varData[card.dataset.key];
+        varTitle.textContent = data.title;
+        varText.textContent = data.text;
+        updateBars(data.bars);
+      });
+    });
+
+    updateBars(varData.v1.bars);
+  </script>
+</body>
+</html>
