@@ -1,0 +1,35 @@
+name: Update materials homepage
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "*.html"
+      - "materials/**/*.html"
+      - "scripts/build-homepage.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-homepage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Rebuild homepage
+        run: node scripts/build-homepage.js
+
+      - name: Commit updated homepage
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update generated homepage [skip ci]"
+          file_pattern: index.html
